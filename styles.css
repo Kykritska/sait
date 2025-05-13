@@ -1029,41 +1029,156 @@ body.dark-theme .catalog-controls select:focus {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffff00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
 }
 
-/* Gallery Styles */
+/* Gallery Styles - Uniform Design */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid for gallery */
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusted minmax for potentially smaller uniform items */
+    gap: 1rem;
     margin-top: 20px;
 }
 
+/* Specific grid for employees, retaining its compactness if desired */
+.gallery-grid-employees {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.8rem;
+}
+
+/* Unified style for ALL gallery image containers (figure or div) */
+.gallery-grid > * { /* Target direct children: figure or div.gallery-item */
+    overflow: hidden; /* Ensure content fits */
+    border-radius: 6px; /* Apply border-radius to the container */
+    border: 2px solid var(--border-color-soft); /* Visible border on the container */
+    background-color: var(--bg-wrapper); /* Background for consistency */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Unified style for ALL gallery images */
 .gallery-grid img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-    border: 1px solid var(--border-color-content-section);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: block; /* Remove extra space below image */
+    width: 100%; /* Fill container width */
+    height: 200px; /* Fixed height for uniformity */
+    object-fit: cover; /* Crop image to fit container, maintaining aspect ratio */
+    vertical-align: middle; /* Align image */
+    border: none; /* Remove individual image borders */
+    border-radius: 0; /* Remove individual image radius, use container's */
+    box-shadow: none; /* Remove individual image shadow, use container's */
+    transition: transform 0.3s ease; /* Keep image transition for hover */
 }
 
-.gallery-grid img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+/* Unified hover effect for ALL gallery containers */
+.gallery-grid > *:hover {
+    transform: translateY(-4px); /* Slight lift effect */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+    border-color: var(--text-link); /* Highlight border on hover */
 }
 
-body.dark-theme .gallery-grid img {
-    border-color: var(--border-color-content-section);
-    box-shadow: 0 2px 4px rgba(255,255,255,0.05);
+/* Optional: slight zoom on image itself on container hover */
+.gallery-grid > *:hover img {
+    transform: scale(1.05);
 }
 
-body.dark-theme .gallery-grid img:hover {
-    box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+/* Remove conflicting employee-specific image style */
+/* .gallery-employee-item img { ... } - Removed or commented out */
+
+/* Adjust employee figcaption for new container style */
+.gallery-employee-item figcaption {
+    /* ... existing styles ... */
+    position: absolute; /* Re-apply if needed, or adjust based on container */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker semi-transparent background for better contrast on diverse images */
+    color: #fff; /* White text */
+    padding: 0.5rem 0.4rem; /* Adjusted padding */
+    font-size: 0.85em;
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Subtle top border */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-employee-item:hover figcaption {
+    opacity: 1;
+}
+
+.gallery-employee-item figcaption small {
+    color: #eee; /* Lighter text for subtitle */
+    font-size: 0.9em;
+}
+
+/* --- Dark Theme Adjustments --- */
+body.dark-theme .gallery-grid > * {
+    border-color: var(--border-color-soft-dark);
+    background-color: var(--bg-content-section); /* Use content section bg */
+    box-shadow: 0 2px 5px rgba(255,255,255,0.08);
+}
+
+body.dark-theme .gallery-grid > *:hover {
+    border-color: var(--text-link-hover);
+    box-shadow: 0 6px 12px rgba(255,255,255,0.12);
+}
+
+/* No specific dark theme needed for img if using container background */
+
+body.dark-theme .gallery-employee-item figcaption {
+    background-color: rgba(20, 20, 20, 0.7);
+    color: var(--text-color-dark);
+    border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+body.dark-theme .gallery-employee-item figcaption small {
+    color: #ccc; /* Adjust subtitle color for dark theme */
+}
+
+/* --- High Contrast Adjustments --- */
+.high-contrast .gallery-grid > * {
+    border: 3px solid #ffff00 !important; /* Thick yellow border */
+    background-color: #000 !important; /* Black background */
+    box-shadow: none !important;
 }
 
 .high-contrast .gallery-grid img {
-    border: 2px solid #ffff00 !important; /* Yellow border */
-    filter: grayscale(50%) contrast(1.5); /* Example filter for high contrast */
+    height: 180px; /* Slightly adjust height if needed */
+    object-fit: contain; /* Show whole image, may leave bars */
+    filter: contrast(200%); /* High contrast filter */
 }
+
+.high-contrast .gallery-grid > *:hover {
+    transform: none; /* Disable hover transform */
+    border-color: #00ff00 !important; /* Green border on hover */
+}
+
+.high-contrast .gallery-grid > *:hover img {
+    transform: none; /* Disable image zoom */
+}
+
+/* Adjust employee figcaption for high contrast */
+.high-contrast .gallery-employee-item figcaption {
+    position: static; /* Place below image */
+    opacity: 1; /* Always visible */
+    background-color: #000 !important;
+    color: #ffff00 !important; /* Yellow text */
+    border-top: 2px solid yellow !important;
+    padding: 0.4rem;
+}
+
+.high-contrast .gallery-employee-item figcaption small {
+    color: #00ff00 !important; /* Green subtitle */
+}
+
+/* Specific grid for employees, retaining its compactness if desired */
+/* .gallery-grid-employees was defined earlier, this section can be removed or merged if distinct rules needed beyond the generic .gallery-grid > * */
+
+/* Employee specific gallery styles */
+.gallery-employee-item {
+    margin: 0;
+    position: relative; /* Already set on .gallery-grid > *, but re-state for clarity if .gallery-employee-item has other unique positioning needs */
+    /* overflow: hidden; is now on .gallery-grid > * so it might be redundant here */
+}
+
+/* .gallery-employee-item img specific styles were mostly removed or unified. */
+/* If any very specific styles for employee images are needed, they can be re-added here, */
+/* but ensure they don't conflict with the new unified .gallery-grid img styles. */
 
 /* Why Us Section */
 .why-us,
@@ -1897,9 +2012,162 @@ body.dark-theme .review-rating .star.empty {
     line-height: 1.6;
     color: var(--text-color);
     margin-top: 0.5rem;
+    margin-bottom: 1rem; /* Added margin for spacing before replies/button */
 }
 
-/* High Contrast Review Styles */
+/* Review Replies Styles */
+.review-replies {
+    margin-top: 1rem;
+    margin-left: 2rem; /* Indent replies */
+    border-left: 3px solid var(--border-color-soft);
+    padding-left: 1rem;
+}
+
+.review-reply {
+    padding: 0.8rem;
+    margin-bottom: 0.8rem;
+    background-color: var(--bg-reply); /* Use a specific var or a lighter/darker shade */
+    border-radius: 4px;
+    border: 1px solid var(--border-color-soft);
+}
+
+body.dark-theme .review-reply {
+    background-color: var(--bg-reply-dark);
+    border-color: var(--border-color-soft-dark);
+}
+
+.review-reply-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+.reply-author {
+    font-weight: bold;
+    font-size: 0.95em;
+    color: var(--text-accent);
+}
+
+body.dark-theme .reply-author {
+    color: var(--text-accent-dark);
+}
+
+.reply-date {
+    font-size: 0.8em;
+    color: var(--text-placeholder);
+}
+
+.reply-text {
+    font-size: 0.95em;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+/* Reply Button and Form Styles */
+.reply-btn,
+.submit-reply-btn,
+.cancel-reply-btn {
+    background-color: var(--button-bg-secondary);
+    color: var(--button-text-secondary);
+    border: 1px solid var(--button-border-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    font-size: 0.9em;
+    margin-top: 0.5rem;
+    margin-right: 0.5rem; /* Space between buttons */
+}
+
+.reply-btn:hover,
+.submit-reply-btn:hover,
+.cancel-reply-btn:hover {
+    background-color: var(--button-bg-secondary-hover);
+    border-color: var(--button-border-secondary-hover);
+}
+
+.reply-form-container {
+    margin-top: 0.8rem;
+    padding: 0.8rem;
+    background-color: var(--bg-reply-form); /* Slightly different from review or reply bg */
+    border: 1px solid var(--border-color-soft);
+    border-radius: 4px;
+}
+
+body.dark-theme .reply-form-container {
+    background-color: var(--bg-reply-form-dark);
+    border-color: var(--border-color-soft-dark);
+}
+
+.reply-text-area {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color-input);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+    font-size: 0.95em;
+    resize: vertical;
+}
+
+body.dark-theme .reply-text-area {
+    background-color: var(--input-bg-dark);
+    border-color: var(--input-border-dark);
+    color: var(--input-text-dark);
+}
+
+/* High Contrast Review Replies and Form */
+.high-contrast .review-replies {
+    border-left-color: #00ff00; /* Bright green */
+}
+
+.high-contrast .review-reply {
+    background-color: #222 !important;
+    border-color: #00ffff !important; /* Cyan */
+}
+
+.high-contrast .reply-author {
+    color: #ffff00 !important; /* Yellow */
+}
+
+.high-contrast .reply-date {
+    color: #bbb !important;
+}
+
+.high-contrast .reply-text {
+    color: #fff !important;
+}
+
+.high-contrast .reply-btn,
+.high-contrast .submit-reply-btn,
+.high-contrast .cancel-reply-btn {
+    background-color: #333 !important;
+    color: #ffff00 !important;
+    border-color: #ffff00 !important;
+}
+
+.high-contrast .reply-btn:hover,
+.high-contrast .submit-reply-btn:hover,
+.high-contrast .cancel-reply-btn:hover {
+    background-color: #444 !important;
+    border-color: #00ff00 !important;
+}
+
+.high-contrast .reply-form-container {
+    background-color: #1c1c1c !important;
+    border-color: #00ff00 !important;
+}
+
+.high-contrast .reply-text-area {
+    background-color: #2a2a2a !important;
+    border-color: #ffff00 !important;
+    color: #fff !important;
+}
+
+
+/* --- High Contrast Review Styles --- */
 .high-contrast #review-form {
     background-color: #111 !important;
     border-color: #ffff00 !important;
@@ -2141,4 +2409,82 @@ body.dark-theme .pagination-ellipsis {
 .high-contrast .pagination-ellipsis {
     color: #fff !important; /* Ensure visibility in high contrast */
     font-weight: bold;
+}
+
+.high-contrast .gallery-grid img {
+    border-color: #00ff00 !important;
+}
+
+/* Grid for compact employee photos */
+.gallery-grid-employees {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Smaller min size for more items per row */
+    gap: 0.8rem; /* Slightly reduced gap */
+}
+
+/* Employee specific gallery styles */
+.gallery-employee-item {
+    margin: 0; /* Reset default figure margin */
+    position: relative;
+    overflow: hidden; /* Ensure figcaption doesn't overflow */
+}
+
+.gallery-employee-item img {
+    display: block; /* Remove extra space below img */
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 4px; /* Optional: match other images */
+}
+
+.gallery-employee-item figcaption {
+    text-align: center;
+    padding: 0.4rem 0.3rem; /* Reduced padding */
+    font-size: 0.8em; /* Slightly smaller font for caption */
+    color: var(--text-color);
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white background */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: opacity 0.3s ease;
+    opacity: 0; /* Hidden by default */
+}
+
+.gallery-employee-item:hover figcaption {
+    opacity: 1; /* Show on hover */
+}
+
+.gallery-employee-item figcaption small {
+    display: block;
+    font-size: 0.85em; /* Adjusted relative to new parent font size */
+    color: var(--text-placeholder);
+    margin-top: 0.1rem; /* Reduced margin */
+}
+
+/* Dark theme adjustments */
+body.dark-theme .gallery-employee-item figcaption {
+    background-color: rgba(30, 30, 30, 0.85); /* Semi-transparent dark background */
+    color: var(--text-color-dark);
+}
+
+body.dark-theme .gallery-employee-item figcaption small {
+    color: var(--text-placeholder-dark);
+}
+
+/* High contrast adjustments */
+.high-contrast .gallery-employee-item {
+    border: 2px solid yellow;
+}
+
+.high-contrast .gallery-employee-item figcaption {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    color: #ffff00 !important; /* Yellow text */
+    opacity: 1; /* Always visible in high contrast */
+    position: static; /* Display below image */
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+
+.high-contrast .gallery-employee-item figcaption small {
+    color: #00ff00 !important; /* Green text */
 }
