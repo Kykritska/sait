@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Блок питания Corsair RM750x",
             price: 10000,
             description: "Надежный блок питания 750W Gold сертификации.",
-            imageUrl: "https://www.kitguru.net/wp-content/uploads/2015/09/AS7V2680.jpg",
+            imageUrl: "Блок питания Corsair RM750x.jpg",
             brand: "Corsair",
             category: "Блок питания",
             characteristics: {
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Гарнитура HyperX Cloud II",
             price: 7500,
             description: "Популярная игровая гарнитура с отличным звуком.",
-            imageUrl: "Гарнитура HyperX Cloud II.jpg",
+            imageUrl: "HyperX Cloud II.jpg",
             brand: "HyperX",
             category: "Гарнитура",
             characteristics: {
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Материнская плата MSI MPG B550 GAMING PLUS",
             price: 14000,
             description: "Надежная материнская плата для процессоров AMD Ryzen.",
-            imageUrl: "Материнская плата MSI MPG B550 GAMING PLUS.jpg",
+            imageUrl: "Материнская плата MSI MPG B550 GAMING PLUS.png",
             brand: "MSI",
             category: "Материнская плата",
             characteristics: {
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Монитор AOC 24G2",
             price: 18000,
             description: "24-дюймовый игровой IPS монитор, 144Hz.",
-            imageUrl: "Монитор AOC 24G2.jpg",
+            imageUrl: "Монитор AOC 24G2.png",
             brand: "AOC",
             category: "Монитор",
             characteristics: {
