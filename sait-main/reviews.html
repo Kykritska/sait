@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Отзывы</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="reviews.js"></script>
+</head>
+<body>
+<div class="page-wrapper">
+    <header class="site-header">
+        <h1 class="site-title"><a href="index.html">ТехноПорт</a></h1>
+        <div class="logo-area">
+            <a href="index.html"><img src="letovfon.png" alt="Логотип ТехноПорт - Е. Летов" title="На главную"></a>
+        </div>
+        <form class="search-form" action="catalog.html" method="GET">
+            <input type="search" name="search" placeholder="Поиск по каталогу..." aria-label="Поиск по каталогу">
+            <button type="submit">🔍</button>
+        </form>
+        <a href="cart.html" class="header-cart-button" title="Корзина">
+            🛒 <span id="cart-item-count-header" class="cart-count">0</span>
+        </a>
+        <div id="clock"></div>
+        <button id="theme-toggle" title="Переключить тему" aria-label="Переключить светлую/темную тему">🌓</button>
+        <button id="accessibility-toggle" title="Режим для слабовидящих" aria-label="Переключить режим для слабовидящих">👁️</button>
+    </header>
+
+    <section class="banner-area">
+        <a href="catalog.html" class="banner-link">
+            <span>Скидки до 30% на видеокарты! | Новые поступления процессоров Intel и AMD! | Бесплатная доставка от 10 000 ₽!</span>
+        </a>
+    </section>
+
+    <div class="main-area-wrapper">
+        <main class="content-section">
+            <section>
+                <h1>Отзывы</h1>
+                <form id="review-form">
+                    <input type="text" id="reviewer-name" placeholder="Ваше имя" required>
+                    <textarea id="review-text" placeholder="Ваш отзыв" required></textarea>
+                    <label for="rating">Оценка:</label>
+                    <select id="rating" required>
+                        <option value="5">5 - Отлично</option>
+                        <option value="4">4 - Хорошо</option>
+                        <option value="3">3 - Нормально</option>
+                        <option value="2">2 - Плохо</option>
+                        <option value="1">1 - Ужасно</option>
+                    </select>
+                    <button type="submit">Отправить отзыв</button>
+                </form>
+                <div id="reviews-list"></div>
+            </section>
+        </main>
+
+        <aside class="sidebar-nav">
+            <h2>Навигация</h2>
+            <ul class="nav-bar">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="news.html">Новости</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="gallery.html">Галерея</a></li>
+                <li><a href="about.html">О нас</a></li>
+                <li><a href="register.html">Регистрация</a></li>
+                <li><a href="login.html">Вход</a></li>
+                <li><a href="reviews.html">Отзывы</a></li>
+                <li><a href="product_order_form.html">Заявка на товар</a></li>
+                <li><a href="warranty.html">Гарантия</a></li>
+            </ul>
+            <div class="visitor-counter">
+                Посещений: <span id="visit-count">0</span>
+            </div>
+        </aside>
+    </div>
+    
+    <footer class="page-footer-content">
+        <div class="footer-columns">
+            <div class="footer-info">
+                <p>&copy; 2025 Магазин Компьютерных Компонентов ТехноПорт. Все права защищены.</p>
+                <p>Контактная информация: email@example.com | +7 999 123 45 67</p>
+            </div>
+            <div class="footer-sitemap">
+                <h4>Карта сайта</h4>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                    <li><a href="news.html">Новости</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="gallery.html">Галерея</a></li>
+                    <li><a href="register.html">Регистрация</a></li>
+                    <li><a href="login.html">Вход</a></li>
+                    <li><a href="cart.html">Корзина</a></li>
+                    <li><a href="reviews.html">Отзывы</a></li>
+                    <li><a href="product_order_form.html">Заказ</a></li>
+                    <li><a href="warranty.html">Гарантия</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+<button id="scrollToTopBtn" title="Наверх">↑</button>
+<script defer src="script.js"></script>
+<script defer src="counter.js"></script>
+<script defer src="accessibility.js"></script>
+<script defer src="theme-switcher.js"></script>
+<script defer src="clock.js"></script>
+<script defer src="nav-highlight.js"></script>
+</body>
+</html>
