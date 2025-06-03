@@ -3,15 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // const cartItemCountSpan = document.getElementById('cart-item-count'); // Old sidebar count
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // This function is also defined in script.js, ensure consistency or use the global one from script.js
-    // For now, let's make it consistent with the header cart count ID.
+    // Глобальная функция обновления счетчика корзины в хедере
     window.updateCartCountDisplay = function() {
         const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
         let totalItems = 0;
         currentCart.forEach(item => {
             totalItems += item.quantity || 0;
         });
-
         const cartItemCountSpanHeader = document.getElementById('cart-item-count-header');
         if (cartItemCountSpanHeader) {
             cartItemCountSpanHeader.textContent = totalItems;
@@ -23,6 +21,64 @@ document.addEventListener('DOMContentLoaded', () => {
         // if (oldCartItemCountSpan) { /* ... update or hide ... */ }
     };
 
+    // Функция для отображения VIP предложения и управления им
+    function displayVipOffer(total) {
+        const vipOfferSection = document.getElementById('vip-offer-section');
+        if (!vipOfferSection) return;
+
+        const isVip = localStorage.getItem('isVIP') === 'true';
+        const vipThreshold = 800000;
+        const vipDiscountPercent = localStorage.getItem('vipDiscountPercent') || '30';
+
+        if (isVip) {
+            vipOfferSection.innerHTML = `
+                <p style="color: green; font-weight: bold;">⭐ VIP-карта активна! Ваша постоянная скидка ${vipDiscountPercent}% уже применяется.</p>
+            `;
+            vipOfferSection.style.display = 'block';
+        } else if (total >= vipThreshold) {
+            vipOfferSection.innerHTML = `
+                <h4>🎉 Поздравляем!</h4>
+                <p>Ваша сумма покупки (${total.toLocaleString('ru-RU')}₽) достигла ${vipThreshold.toLocaleString('ru-RU')}₽.</p>
+                <p>Нажмите кнопку ниже, чтобы <strong>активировать VIP-карту</strong> и получить постоянную скидку <strong>${vipDiscountPercent}%</strong> на все текущие и последующие заказы!</p>
+                <button id="activate-vip-btn" class="btn btn-success" style="margin-top: 10px;">Активировать VIP-карту (скидка ${vipDiscountPercent}%)</button>
+            `;
+            vipOfferSection.style.display = 'block';
+
+            const activateVipBtn = document.getElementById('activate-vip-btn');
+            if (activateVipBtn) {
+                activateVipBtn.addEventListener('click', () => {
+                    localStorage.setItem('isVIP', 'true');
+                    localStorage.setItem('vipDiscountPercent', vipDiscountPercent);
+                    vipOfferSection.innerHTML = `
+                        <p style="color: green; font-weight: bold;">✅ VIP-карта успешно активирована!</p>
+                        <p>Ваша скидка ${vipDiscountPercent}% будет автоматически применена.</p>
+                        <p><em>Цены в корзине и каталоге обновлены.</em></p>
+                    `;
+                    renderCart();
+                    if (window.renderCatalog) {
+                        window.renderCatalog();
+                    }
+                    if (window.displayVipStatus) {
+                        window.displayVipStatus();
+                    }
+                    updateCartCountDisplay();
+                }, { once: true });
+            }
+        } else {
+            vipOfferSection.style.display = 'none';
+            vipOfferSection.innerHTML = '';
+        }
+    }
+    
+    // Функция обновления итоговой суммы в корзине и вызова VIP предложения
+    function updateCartTotalDisplay(total) {
+        const cartTotalPriceEl = document.getElementById('cart-total-price');
+        if (cartTotalPriceEl) {
+            cartTotalPriceEl.textContent = `${total.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽`;
+        }
+        displayVipOffer(total);
+    }
+
     function renderCart() {
         if (!cartItemsContainer) return;
         cartItemsContainer.innerHTML = '';
@@ -30,6 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p class="cart-empty-message">Корзина пуста.</p>';
             updateCartTotalDisplay(0);
+            // Убедимся, что VIP-предложение скрыто, если корзина пуста
+            const vipOfferSection = document.getElementById('vip-offer-section');
+            if (vipOfferSection) {
+                vipOfferSection.style.display = 'none';
+                vipOfferSection.innerHTML = '';
+            }
             return;
         }
 
@@ -59,15 +121,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const tbody = cartTable.querySelector('tbody');
 
         let grandTotal = 0;
+        const isVipActive = localStorage.getItem('isVIP') === 'true';
+        const vipDiscountRate = isVipActive ? (parseFloat(localStorage.getItem('vipDiscountPercent')) / 100) || 0.30 : 0;
 
         cart.forEach((item, index) => {
-            const itemTotal = item.price * item.quantity;
+            let currentItemPrice = parseFloat(item.price);
+            let originalItemPriceHTML = '';
+
+            if (isVipActive) {
+                const discountedPrice = currentItemPrice * (1 - vipDiscountRate);
+                originalItemPriceHTML = `<span class="original-price" style="text-decoration: line-through; color: grey; font-size: 0.9em; margin-left: 5px;">${currentItemPrice.toLocaleString('ru-RU')}₽</span>`;
+                currentItemPrice = discountedPrice;
+            }
+            
+            const itemTotal = currentItemPrice * item.quantity;
             grandTotal += itemTotal;
 
             const productInStock = window.products ? window.products.find(p => p.id === item.id) : null;
-            // Если товар по какой-то причине не найден в window.products (например, был удален из каталога после добавления в корзину),
-            // currentStock будет Infinity, что позволит изменять количество, но это редкий крайний случай.
-            // В идеале, такие товары нужно было бы обрабатывать отдельно (например, удалять из корзины или помечать как недоступные).
             const currentStock = productInStock ? productInStock.stock : Infinity;
             
             const row = tbody.insertRow();
@@ -77,13 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                 </td>
                 <td class="cart-item-name">${item.name}</td>
-                <td class="cart-item-price">${item.price}₽</td>
+                <td class="cart-item-price">${currentItemPrice.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽ ${originalItemPriceHTML}</td>
                 <td class="cart-item-quantity">
                     <button class="quantity-btn" data-index="${index}" data-action="decrease" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
                     <span>${item.quantity}</span>
                     <button class="quantity-btn" data-index="${index}" data-action="increase" ${item.quantity >= currentStock ? 'disabled' : ''}>+</button>
                 </td>
-                <td class="cart-item-subtotal">${itemTotal}₽</td>
+                <td class="cart-item-subtotal">${itemTotal.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽</td>
                 <td class="cart-item-remove">
                     <button class="remove-btn" data-index="${index}">Удалить</button>
                 </td>
@@ -93,107 +163,100 @@ document.addEventListener('DOMContentLoaded', () => {
         cartItemsContainer.appendChild(cartTable);
         updateCartTotalDisplay(grandTotal);
 
-        const buyBtn = document.createElement('button');
-        buyBtn.textContent = 'Оформить заказ';
-        buyBtn.className = 'cart-checkout-btn';
-        buyBtn.onclick = () => {
-            if (cart.length > 0) {
-                alert('Спасибо за покупку! Ваш заказ оформлен.');
-                cart = [];
-                localStorage.setItem('cart', JSON.stringify(cart));
-                renderCart(); // Re-render to show empty cart
-                updateCartCountDisplay(); // Update badge
+        const existingCheckoutBtn = cartItemsContainer.querySelector('.cart-checkout-btn');
+        if (existingCheckoutBtn) {
+            existingCheckoutBtn.remove();
+        }
+
+        if (cart.length > 0) {
+            const buyBtn = document.createElement('button');
+            buyBtn.textContent = 'Оформить заказ';
+            buyBtn.className = 'cart-checkout-btn';
+            buyBtn.style.marginTop = '20px';
+            buyBtn.onclick = () => {
+                if (cart.length > 0) {
+                    const finalIsVip = localStorage.getItem('isVIP') === 'true';
+                    const finalDiscountRate = finalIsVip ? (parseFloat(localStorage.getItem('vipDiscountPercent')) / 100) || 0.30 : 0;
+                    let orderTotal = 0;
+                    // Пересчитываем сумму заказа на основе ТЕКУЩЕЙ корзины из localStorage, чтобы учесть VIP активацию в этом сеансе
+                    const currentCartState = JSON.parse(localStorage.getItem('cart')) || [];
+                    currentCartState.forEach(cartItem => {
+                        let priceForTotal = parseFloat(cartItem.price);
+                        if (finalIsVip) {
+                             priceForTotal = priceForTotal * (1 - finalDiscountRate);
+                        }
+                        orderTotal += priceForTotal * cartItem.quantity;
+                    });
+
+                    alert(`Спасибо за покупку! Ваш заказ на сумму ${orderTotal.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}₽ оформлен.`);
+                    
+                    cart = [];
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    renderCart();
+                    updateCartCountDisplay();
+                } else {
+                    alert('Ваша корзина пуста.');
+                }
+            };
+            // Вставляем кнопку "Оформить заказ" ПОСЛЕ VIP блока (если он есть и видим) или после таблицы
+            const vipSection = document.getElementById('vip-offer-section');
+            if (vipSection && vipSection.style.display !== 'none' && vipSection.parentNode === cartItemsContainer) {
+                 vipSection.insertAdjacentElement('afterend', buyBtn);
             } else {
-                alert('Ваша корзина пуста.');
+                 cartTable.insertAdjacentElement('afterend', buyBtn);
             }
-        };
-        cartItemsContainer.appendChild(buyBtn);
+        }
 
         addCartEventListeners();
         updateCartCountDisplay();
     }
 
-    function updateCartTotalDisplay(total) {
-        const cartTotalPriceEl = document.getElementById('cart-total-price');
-        if (cartTotalPriceEl) {
-            cartTotalPriceEl.textContent = `${total}₽`;
-        }
-    }
-    
     function addCartEventListeners() {
-        const quantityButtons = cartItemsContainer.querySelectorAll('.quantity-btn');
-        const removeButtons = cartItemsContainer.querySelectorAll('.remove-btn');
-
-        quantityButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.index);
-                const action = e.target.dataset.action;
+        // Используем делегирование событий на cartItemsContainer для динамически добавляемых кнопок
+        cartItemsContainer.addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.classList.contains('quantity-btn')) {
+                const index = parseInt(target.dataset.index);
+                const action = target.dataset.action;
                 updateQuantity(index, action);
-            });
-        });
-
-        removeButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.index);
+            } else if (target.classList.contains('remove-btn')) {
+                const index = parseInt(target.dataset.index);
                 removeFromCart(index);
-            });
+            }
         });
     }
 
     function updateQuantity(index, action) {
         const cartItem = cart[index];
-        if (!cartItem) {
-            console.error("Cart item not found at index:", index);
-            return;
-        }
+        if (!cartItem) return;
 
         const productInCatalog = window.products ? window.products.find(p => p.id === cartItem.id) : null;
-
         if (!productInCatalog) {
-            console.error(`Product with id ${cartItem.id} not found in window.products. Cannot update quantity in cart.`);
-            if (window.showToastNotification) {
-                window.showToastNotification('Ошибка: Информация о товаре не найдена, количество не обновлено.', 'error');
-            } else {
-                alert('Ошибка: Информация о товаре не найдена, количество не обновлено.');
-            }
+            const message = 'Ошибка: Информация о товаре не найдена.';
+            if (window.showToastNotification) { window.showToastNotification(message, 'error'); } else { alert(message); }
             return;
         }
 
         if (action === 'increase') {
-            // Проверяем, есть ли ЕЩЕ товар на складе (productInCatalog.stock это УЖЕ уменьшенный остаток)
-            // Нам нужно проверить, что productInCatalog.stock (текущий остаток на складе) > 0
-            if (typeof productInCatalog.stock === 'number' && productInCatalog.stock <= 0) {
-                 if (window.showToastNotification) {
-                     window.showToastNotification(`Невозможно увеличить количество \"${productInCatalog.name}\". Товар закончился на складе.`);
-                } else {
-                    alert(`Невозможно увеличить количество \"${productInCatalog.name}\". Товар закончился на складе.`);
-                }
-                // Убедимся, что кнопка "+" в корзине заблокирована, если stock стал 0
-                // Это должно произойти при renderCart(), но на всякий случай
-                renderCart(); 
-                return; 
+            if (productInCatalog.stock <= 0) {
+                const message = `Невозможно увеличить количество "${productInCatalog.name}". Товар закончился.`;
+                if (window.showToastNotification) { window.showToastNotification(message); } else { alert(message); }
+                return;
             }
-            
-            // Уменьшаем stock в window.products
-            productInCatalog.stock -= 1;
+            productInCatalog.stock--;
             cartItem.quantity++;
-
         } else if (action === 'decrease') {
             if (cartItem.quantity > 1) {
-                // Увеличиваем stock в window.products
-                productInCatalog.stock += 1;
+                productInCatalog.stock++;
                 cartItem.quantity--;
             } else {
-                return; // Уже 1, дальше не уменьшаем
+                return;
             }
         }
 
         localStorage.setItem('cart', JSON.stringify(cart));
-        renderCart(); 
-        if (window.updateCartCountDisplay) {
-            window.updateCartCountDisplay();
-        }
-        // Обновляем отображение товара в каталоге, если функция доступна
+        renderCart();
+        updateCartCountDisplay();
         if (window.updateProductDisplayInCatalog) {
             window.updateProductDisplayInCatalog(cartItem.id);
         }
@@ -201,27 +264,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.removeFromCart = function(index) {
         const removedItem = cart[index];
-        if (!removedItem) {
-            console.error("Item to remove not found at index:", index);
-            return;
-        }
+        if (!removedItem) return;
 
         const productInCatalog = window.products ? window.products.find(p => p.id === removedItem.id) : null;
-
         if (productInCatalog) {
-            // Возвращаем количество удаленного товара на "склад" в window.products
             productInCatalog.stock += removedItem.quantity;
-        } else {
-            console.warn(`[removeFromCart] Product with id ${removedItem.id} not found in window.products. Stock not restored.`);
         }
-
         cart.splice(index, 1);
         localStorage.setItem('cart', JSON.stringify(cart));
         renderCart();
-        if (window.updateCartCountDisplay) {
-            window.updateCartCountDisplay();
-        }
-        // Обновляем отображение товара в каталоге
+        updateCartCountDisplay();
         if (productInCatalog && window.updateProductDisplayInCatalog) {
             window.updateProductDisplayInCatalog(removedItem.id);
         }

@@ -5,8 +5,8 @@ window.products = [
         name: "Игровой ПК \"Норд\", Intel Core i5, RTX 3060, 16GB RAM, 1TB SSD",
         category: "Готовые сборки ПК",
         brand: "Custom Build",
-        price: 95000,
-        originalPrice: 105000,
+        price: 85500,
+        originalPrice: 95000,
         image: "rtx3060.png",
         description: "Мощный игровой компьютер для современных игр в Full HD и 2K разрешении.",
         featured: true,
@@ -61,7 +61,7 @@ window.products = [
         category: "Периферия",
         brand: "HyperX",
         price: 7200,
-        image: "HyperX Cloud II.jpg",
+        image: "HyperX Alloy Origins Core.webp",
         description: "Механическая игровая клавиатура с переключателями HyperX Red.",
         featured: false,
         characteristics: {
@@ -127,7 +127,7 @@ window.products = [
         category: "Комплектующие",
         brand: "Samsung",
         price: 11000,
-        image: "placeholder-image.png",
+        image: "SSD Samsung 970 EVO Plus 1TB.jpg",
         description: "NVMe M.2 SSD накопитель с высокой скоростью чтения и записи.",
         featured: true,
         characteristics: {
@@ -209,7 +209,7 @@ window.products = [
         category: "Планшеты",
         brand: "Samsung",
         price: 65000,
-        image: "placeholder-image.png",
+        image: "Samsung Galaxy Tab S8.webp",
         description: "Производительный планшет на Android с поддержкой S Pen.",
         characteristics: {
             "Дисплей": "11 LTPS TFT, 120Hz",
@@ -225,7 +225,7 @@ window.products = [
         category: "Фото и видео",
         brand: "GoPro",
         price: 42000,
-        image: "placeholder-image.png",
+        image: "GoPro HERO11 Black.webp",
         description: "Новая экшн-камера с улучшенной стабилизацией и качеством видео.",
         characteristics: {
             "Видео": "5.3K60, 4K120",
@@ -241,7 +241,7 @@ window.products = [
         category: "Сетевое оборудование",
         brand: "Keenetic",
         price: 8500,
-        image: "placeholder-image.png",
+        image: "Keenetic Giga (KN-1011).webp",
         description: "Двухдиапазонный гигабитный интернет-центр с Wi-Fi AC1300.",
         characteristics: {
             "Стандарт Wi-Fi": "802.11ac Wave 2 (Wi-Fi 5)",
@@ -320,12 +320,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInputHeader = searchFormHeader?.querySelector('input[name="search"]');
     const catalogSearchInfo = document.getElementById('catalog-search-info');
     const paginationControlsContainer = document.getElementById('pagination-controls');
+    const vipStatusIndicator = document.getElementById('vip-status-indicator');
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let lazyImageObserver = null;
     let currentSearchTerm = '';
     let currentPage = 1;
     const itemsPerPage = 6;
+
+    // Функция для отображения глобального VIP статуса
+    window.displayVipStatus = function() {
+        if (!vipStatusIndicator) return;
+        const isVip = localStorage.getItem('isVIP') === 'true';
+        const vipDiscountPercent = localStorage.getItem('vipDiscountPercent') || '30';
+
+        if (isVip) {
+            vipStatusIndicator.innerHTML = `⭐ <strong style="color: #FFD700;">VIP Клиент</strong>: Ваша скидка ${vipDiscountPercent}% активна!`;
+            vipStatusIndicator.style.display = 'block';
+            vipStatusIndicator.style.textAlign = 'center';
+            vipStatusIndicator.style.padding = '8px 15px'; // Немного увеличил padding
+            vipStatusIndicator.style.backgroundColor = 'var(--background-color-accent, #343a40)'; // Темный фон для лучшего контраста
+            vipStatusIndicator.style.color = '#FFD700'; // Золотой цвет для текста VIP
+            vipStatusIndicator.style.marginBottom = '15px';
+            vipStatusIndicator.style.borderRadius = '5px';
+            vipStatusIndicator.style.border = '1px solid #FFD700'; // Золотая рамка
+            vipStatusIndicator.style.fontWeight = 'bold';
+        } else {
+            vipStatusIndicator.style.display = 'none';
+            vipStatusIndicator.innerHTML = '';
+        }
+    }
+    // Вызываем отображение VIP статуса сразу при загрузке DOM
+    if (window.displayVipStatus) {
+        window.displayVipStatus();
+    }
 
     const lazyLoadCallback = (entries, observer) => {
         entries.forEach((entry) => {
@@ -375,11 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.updateCartCountDisplay = updateCartCountDisplay;
 
-    // НОВАЯ ФУНКЦИЯ для обновления отображения ОДНОГО товара в каталоге
     function updateProductDisplayInCatalog(productId) {
         const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
         if (!productCard) {
-            // Карточка товара может быть не видна (например, на другой странице пагинации или отфильтрована)
             return;
         }
 
@@ -396,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof product.stock !== 'undefined') {
                 if (product.stock > 0) {
                     stockElement.innerHTML = `<p class="product-stock in-stock">В наличии: ${product.stock} шт.</p>`;
-                    stockElement.className = 'product-stock in-stock'; // Убедимся, что класс правильный
+                    stockElement.className = 'product-stock in-stock';
                 } else {
                     stockElement.innerHTML = `<p class="product-stock out-of-stock">Нет в наличии</p>`;
                     stockElement.className = 'product-stock out-of-stock';
@@ -417,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    window.updateProductDisplayInCatalog = updateProductDisplayInCatalog; // Делаем доступной глобально
+    window.updateProductDisplayInCatalog = updateProductDisplayInCatalog;
 
     function renderProducts(container, productArray, isFeatured = false) {
         if (!container) return;
@@ -433,19 +459,41 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const isVipActive = localStorage.getItem('isVIP') === 'true';
+        const vipDiscountRate = isVipActive ? (parseFloat(localStorage.getItem('vipDiscountPercent')) / 100) || 0.30 : 0;
+
         productsToRender.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.dataset.productId = product.id;
-            productCard.classList.add('product-card-visible'); // Start as visible
+            productCard.classList.add('product-card-visible');
 
-            let priceHTML = `<p class="product-price">${product.price.toLocaleString('ru-RU')} ₽</p>`;
-            if (product.originalPrice && product.originalPrice > product.price) {
+            let originalProductPrice = parseFloat(product.price); // Это цена без VIP скидки
+            let shopDiscountPrice = product.originalPrice ? parseFloat(product.originalPrice) : null; // Это самая первая цена, если была скидка от магазина
+            
+            let finalPrice = originalProductPrice;
+            let priceHTML;
+
+            if (isVipActive) {
+                finalPrice = originalProductPrice * (1 - vipDiscountRate);
+                priceHTML = `<p class="product-price"><span class="current-price">${finalPrice.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ₽ (VIP)</span>`;
+                // Показываем цену до VIP-скидки (которая могла быть уже со скидкой магазина)
+                priceHTML += `<span class="original-price" style="text-decoration: line-through; margin-left: 8px;">${originalProductPrice.toLocaleString('ru-RU')} ₽</span>`;
+                if (shopDiscountPrice && shopDiscountPrice > originalProductPrice) {
+                     // Если была еще и магазинная скидка, показываем самую первую цену
+                    priceHTML += `<span class="original-price oldest-price" style="font-size:0.8em; text-decoration: line-through; color: #999; margin-left: 8px;">${shopDiscountPrice.toLocaleString('ru-RU')} ₽</span>`;
+                }
+                priceHTML += `</p>`;
+            } else if (shopDiscountPrice && shopDiscountPrice > originalProductPrice) {
+                // Только скидка магазина, без VIP
                 priceHTML = `
                     <p class="product-price">
-                        <span class="current-price">${product.price.toLocaleString('ru-RU')} ₽</span>
-                        <span class="original-price">${product.originalPrice.toLocaleString('ru-RU')} ₽</span>
+                        <span class="current-price">${originalProductPrice.toLocaleString('ru-RU')} ₽</span>
+                        <span class="original-price">${shopDiscountPrice.toLocaleString('ru-RU')} ₽</span>
                     </p>`;
+            } else {
+                // Нет скидок
+                priceHTML = `<p class="product-price">${originalProductPrice.toLocaleString('ru-RU')} ₽</p>`;
             }
 
             let stockStatusHTML = '';
@@ -464,10 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 stockStatusHTML = `<p class="product-stock unknown-stock">Наличие уточняется</p>`;
             }
 
-            // Используем product.image напрямую, если это полный путь или имя файла в той же директории
-            // Если у вас изображения в подпапке, например 'images/', то будет: `images/${product.image}`
-            const imageUrl = product.image; // Предполагаем, что product.image содержит корректный путь или имя файла
-
+            const imageUrl = product.image;
             productCard.innerHTML = `
                 <a href="#" class="product-card-link" data-id="${product.id}">
                     <div class="product-image-container">
@@ -475,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <h3>${product.name}</h3>
                 </a>
-                <p class="product-category">Категория: ${product.category}</p>
+                <p class="product-category">Категория: ${product.category ? product.category + ' ' : 'Не указана '}</p>
                 <p class="product-description">${product.description.substring(0,100)}${product.description.length > 100 ? '...' : ''}</p>
                 ${priceHTML}
                 ${stockStatusHTML} 
@@ -488,11 +533,10 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             container.appendChild(productCard);
 
-            // Add event listeners for the new buttons
             const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
             if (addToCartBtn) {
                 addToCartBtn.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent card link navigation
+                    event.stopPropagation(); 
                     const productId = parseInt(event.target.dataset.id);
                     addToCart(productId);
                 });
@@ -501,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const detailsBtn = productCard.querySelector('.details-btn');
             if (detailsBtn) {
                 detailsBtn.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent card link navigation
+                    event.stopPropagation(); 
                     const productId = parseInt(event.target.dataset.id);
                     showProductDetails(productId);
                 });
@@ -510,7 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const productLink = productCard.querySelector('.product-card-link');
             if (productLink) {
                 productLink.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default link behavior
+                    event.preventDefault(); 
                     const productId = parseInt(event.currentTarget.dataset.id);
                     showProductDetails(productId);
                 });
@@ -567,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
         categories.forEach(category => {
             const option = document.createElement('option');
             option.value = category;
-            option.textContent = category;
+            option.textContent = category ? category + ' ' : '';
             categoryFilterSelect.appendChild(option);
         });
     }
@@ -723,40 +767,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const existingCartItemIndex = cart.findIndex(item => item.id === id);
         const currentQuantityInCart = existingCartItemIndex > -1 ? cart[existingCartItemIndex].quantity : 0;
 
-        // Проверяем, достаточно ли товара на складе для ДОБАВЛЕНИЯ quantityToAdd
-        // (с учетом того, что может быть уже что-то в корзине, но addToCart с карточки товара всегда добавляет +1 к тому, что уже ЕСТЬ на складе)
-        // Эта функция вызывается с карточки товара (всегда quantityToAdd=1) или из модалки (тоже quantityToAdd=1)
-        // Логика для изменения количества УЖЕ В КОРЗИНЕ будет в cart.js
         if (typeof product.stock !== 'number' || product.stock < quantityToAdd) {
             showToastNotification(`К сожалению, товара "${product.name}" недостаточно на складе (осталось ${product.stock || 0}).`);
-            // Обновляем отображение на всякий случай, если stock изменился другим путем
             if(window.updateProductDisplayInCatalog) window.updateProductDisplayInCatalog(id);
             return;
         }
         
-        // Если товар уже в корзине, и мы пытаемся добавить еще, проверяем не превысит ли общее количество остаток
         if (existingCartItemIndex > -1) {
-             if (product.stock < quantityToAdd) { // currentQuantityInCart + quantityToAdd > product.stock
+             if (product.stock < quantityToAdd) {
                 showToastNotification(`Невозможно добавить ${quantityToAdd} шт. товара "${product.name}". На складе: ${product.stock}, в корзине уже: ${currentQuantityInCart}.`);
                 if(window.updateProductDisplayInCatalog) window.updateProductDisplayInCatalog(id);
                 return;
             }
         }
 
-
-        // Уменьшаем сток в глобальном window.products
         product.stock -= quantityToAdd;
 
         if (existingCartItemIndex > -1) {
             cart[existingCartItemIndex].quantity += quantityToAdd;
         } else {
-            // Важно: в корзину кладем КОПИЮ товара, но с quantity.
-            // Stock в этой копии в корзине не будет отражать реальный остаток на складе,
-            // реальный остаток будет в window.products[...].stock
             const productForCart = { ...product }; 
-            // Удаляем stock из объекта в корзине, чтобы не было путаницы,
-            // так как актуальный stock всегда в window.products
-            // delete productForCart.stock; // Или оставляем, но не полагаемся на него в cart.js для проверок
             productForCart.quantity = quantityToAdd;
             cart.push(productForCart);
         }
@@ -765,7 +795,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showToastNotification(`${product.name} (${quantityToAdd} шт.) добавлен в корзину! Остаток: ${product.stock} шт.`);
         updateCartCountDisplay();
 
-        // Обновляем отображение карточки товара в каталоге
         if(window.updateProductDisplayInCatalog) window.updateProductDisplayInCatalog(id);
     }
 
@@ -847,6 +876,28 @@ document.addEventListener('DOMContentLoaded', () => {
             characteristicsHTML += '</ul></div>';
         }
 
+        const isVipActive = localStorage.getItem('isVIP') === 'true';
+        const vipDiscountRate = isVipActive ? (parseFloat(localStorage.getItem('vipDiscountPercent')) / 100) || 0.30 : 0;
+        
+        let originalProductPrice = parseFloat(product.price); // Цена без VIP скидки
+        let shopDiscountPrice = product.originalPrice ? parseFloat(product.originalPrice) : null; // Самая первая цена, если была скидка от магазина
+        let priceInModalHTML;
+        let finalPrice = originalProductPrice;
+
+        if (isVipActive) {
+            finalPrice = originalProductPrice * (1 - vipDiscountRate);
+            priceInModalHTML = `<p class="modal-product-price">Цена: <strong style="color: var(--accent-color);">${finalPrice.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ₽ (VIP)</strong>`;
+            priceInModalHTML += `<span style="text-decoration: line-through; margin-left: 10px;">${originalProductPrice.toLocaleString('ru-RU')} ₽</span>`;
+            if (shopDiscountPrice && shopDiscountPrice > originalProductPrice) {
+                priceInModalHTML += `<span style="font-size:0.9em; text-decoration: line-through; color: #999; margin-left: 10px;">${shopDiscountPrice.toLocaleString('ru-RU')} ₽</span>`;
+            }
+            priceInModalHTML += `</p>`;
+        } else if (shopDiscountPrice && shopDiscountPrice > originalProductPrice) {
+            priceInModalHTML = `<p class="modal-product-price">Цена: <strong>${originalProductPrice.toLocaleString('ru-RU')} ₽</strong> <span style="text-decoration: line-through; margin-left: 10px;">${shopDiscountPrice.toLocaleString('ru-RU')} ₽</span></p>`;
+        } else {
+            priceInModalHTML = `<p class="modal-product-price">Цена: <strong>${originalProductPrice.toLocaleString('ru-RU')} ₽</strong></p>`;
+        }
+
         return `
             <div class="modal-overlay">
                 <div class="modal-content">
@@ -856,14 +907,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="modal-details-column">
                         <h2 class="modal-product-name">${product.name}</h2>
-                        <p class="modal-product-category"><strong>Категория:</strong> ${product.category || 'Не указана'}</p>
+                        <p class="modal-product-category"><strong>Категория:</strong> ${product.category ? product.category + ' ' : 'Не указана '}</p>
                         <p class="modal-product-brand"><strong>Бренд:</strong> ${product.brand || 'Не указан'}</p>
                         <div class="modal-product-description-full">
                             <h3>Описание:</h3>
                             <p>${product.description || 'Описание отсутствует.'}</p>
                         </div>
                         ${characteristicsHTML}
-                        <p class="modal-product-price">Цена: ${product.price}₽</p>
+                        ${priceInModalHTML}
                         <button class="modal-add-to-cart-btn" data-product-id="${product.id}">В корзину</button>
                     </div>
                 </div>
@@ -912,7 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Scroll-to-top button logic
     console.log('[DEBUG] scrollToTopBtn element (checked before attaching listeners):', scrollToTopBtn);
 
     if (scrollToTopBtn) {
@@ -940,7 +990,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Initial check in case the page is already scrolled down (e.g. after a refresh)
         const initialScrollTop = document.body.scrollTop || document.documentElement.scrollTop;
         if (initialScrollTop > 100) {
             scrollToTopBtn.style.display = "block";
@@ -954,6 +1003,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('[DEBUG] scrollToTopBtn element NOT FOUND on this page when trying to attach listeners.');
     }
 
-    // Initial cart count update on page load
     updateCartCountDisplay();
 });
