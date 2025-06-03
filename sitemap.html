@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Контакты</title>
+    <title>Карта сайта - ТехноПорт</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,56 +19,50 @@
         <a href="cart.html" class="header-cart-button" title="Корзина">
             🛒 <span id="cart-item-count-header" class="cart-count">0</span>
         </a>
-        <a href="sitemap.html" class="header-sitemap-link" title="Карта сайта">Карта сайта</a>
         <div id="clock"></div>
         <button id="theme-toggle" title="Переключить тему" aria-label="Переключить светлую/темную тему">🌓</button>
         <button id="accessibility-toggle" title="Режим для слабовидящих" aria-label="Переключить режим для слабовидящих">👁️</button>
     </header>
 
-    <section class="banner-area">
-        <a href="catalog.html" class="banner-link">
-            <span>Скидки до 30% на видеокарты! | Новые поступления процессоров Intel и AMD! | Бесплатная доставка от 10 000 ₽!</span>
-        </a>
-    </section>
-
     <div class="main-area-wrapper">
         <main class="content-section">
             <section>
-                <h1>Контакты</h1>
-                <p>Email: support@pcstore.ru<br>Телефон: +7 999 123 45 67</p>
-                <p>Адрес: г. Москва, ул. Компьютерная, д. 10, офис 404</p>
-                <div style="margin-top: 15px; margin-bottom: 20px;">
-                    <a href="https://yandex.ru/maps/?text=г. Москва, ул. Компьютерная, д. 10, офис 404" target="_blank" rel="noopener noreferrer" class="btn btn-info">Посмотреть на Яндекс.Картах</a>
+                <h1>Карта сайта</h1>
+                <div class="sitemap-links">
+                    <h2>Основные разделы:</h2>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="catalog.html">Каталог</a></li>
+                        <li><a href="news.html">Новости</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="gallery.html">Галерея</a></li>
+                    </ul>
+                    <h2>Аккаунт и покупки:</h2>
+                    <ul>
+                        <li><a href="cart.html">Корзина</a></li>
+                        <li><a href="product_order_form.html">Заявка на закупку оптом</a></li>
+                    </ul>
+                    <h2>Помощь и информация:</h2>
+                    <ul>
+                        <li><a href="reviews.html">Отзывы</a></li>
+                        <li><a href="contacts.html#delivery-info">Информация о доставке (на странице Контакты)</a></li>
+                        <li><a href="about.html#privacy-policy">Политика конфиденциальности (на странице О нас)</a></li>
+                    </ul>
+                     <h2>Дополнительно:</h2>
+                     <ul>
+                        <li><a href="blog.html">Блог</a></li> // Пример, если появится блог
+                        <li><a href="index.html#featured-products">Рекомендуемые товары (на Главной)</a></li>
+                     </ul>
                 </div>
-                
-                <h2>Обратная связь</h2>
-                <p>Если у вас есть вопросы или предложения, пожалуйста, заполните форму ниже:</p>
-                <form id="contact-form" class="contact-form" action="https://formspree.io/f/xwporqvn" method="POST">
-                    <div>
-                        <label for="contact-name">Ваше имя:</label>
-                        <input type="text" id="contact-name" name="name" placeholder="Иван Иванов" required>
-                    </div>
-                    <div>
-                        <label for="contact-email">Ваш Email:</label>
-                        <input type="email" id="contact-email" name="email" placeholder="ivan@example.com" required>
-                    </div>
-                    <div>
-                        <label for="contact-subject">Тема:</label>
-                        <input type="text" id="contact-subject" name="subject" placeholder="Вопрос по заказу №123" required>
-                    </div>
-                    <div>
-                        <label for="contact-message">Сообщение:</label>
-                        <textarea id="contact-message" name="message" rows="6" placeholder="Введите ваше сообщение здесь..." required></textarea>
-                    </div>
-                    <button type="submit">Отправить сообщение</button>
-                    <div id="form-status-message" class="form-status-message" style="display: none;"></div>
-                </form>
             </section>
         </main>
 
         <aside class="sidebar-nav">
             <h2>Навигация</h2>
             <ul class="nav-bar">
+                <li><a href="sitemap.html">Карта сайта</a></li>
                 <li><a href="index.html">Главная</a></li>
                 <li><a href="catalog.html">Каталог</a></li>
                 <li><a href="news.html">Новости</a></li>
@@ -90,7 +84,7 @@
                 <p>&copy; 2025 Магазин Компьютерных Компонентов ТехноПорт. Все права защищены.</p>
                 <p>Контактная информация: email@example.com | +7 999 123 45 67</p>
             </div>
-            <div class="footer-sitemap">
+            <div class="footer-sitemap" id="footer-sitemap-section">
                 <h4>Карта сайта</h4>
                 <ul>
                     <li><a href="index.html">Главная</a></li>
@@ -102,6 +96,7 @@
                     <li><a href="gallery.html">Галерея</a></li>
                     <li><a href="cart.html">Корзина</a></li>
                     <li><a href="reviews.html">Отзывы</a></li>
+                    <li><a href="product_order_form.html">Заявка на закупку оптом</a></li>
                 </ul>
             </div>
         </div>
@@ -114,6 +109,5 @@
 <script defer src="theme-switcher.js"></script>
 <script defer src="clock.js"></script>
 <script defer src="nav-highlight.js"></script>
-<script defer src="contact-form.js"></script>
 </body>
-</html>
+</html> 

@@ -412,6 +412,147 @@ button:hover {
     background-color: var(--bg-button-hover);
 }
 
+/* General Button Styles for <a> tags or other elements */
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: var(--text-button);
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--bg-button);
+    border: 1px solid var(--border-color-button);
+    padding: 0.5rem 1rem; /* Adjusted padding */
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    text-decoration: none; /* Ensure <a> tags don't have underline */
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn:hover {
+    color: var(--text-button);
+    background-color: var(--bg-button-hover);
+    border-color: var(--border-color-button);
+    text-decoration: none;
+}
+
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Example focus, adapt as needed */
+}
+
+/* Secondary Button Style */
+.btn-secondary {
+    color: #fff !important; /* Ensured white text for links */
+    background-color: #6c757d; /* A common secondary color (grey) */
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    color: #fff !important; /* Ensured white text for links on hover */
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.btn-secondary:focus, .btn-secondary.focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+}
+
+/* Info Button Style */
+.btn-info {
+    color: #fff !important; /* Ensured white text for links */
+    background-color: #17a2b8; /* A common info color (teal/blue) */
+    border-color: #17a2b8;
+}
+
+.btn-info:hover {
+    color: #fff !important; /* Ensured white text for links on hover */
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.btn-info:focus, .btn-info.focus {
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5);
+}
+
+/* Dark Theme Adjustments for new .btn styles */
+body.dark-theme .btn {
+    color: var(--text-button);
+    background-color: var(--bg-button);
+    border-color: var(--border-color-button);
+}
+
+body.dark-theme .btn:hover {
+    background-color: var(--bg-button-hover);
+    border-color: var(--border-color-button);
+}
+
+body.dark-theme .btn-secondary {
+    color: #fff !important; /* Ensured white text for links in dark mode */
+    background-color: #5a6268; /* Darker grey for dark theme */
+    border-color: #545b62;
+}
+
+body.dark-theme .btn-secondary:hover {
+    color: #fff !important; /* Ensured white text for links on hover in dark mode */
+    background-color: #495057;
+    border-color: #454c52;
+}
+
+body.dark-theme .btn-info {
+    color: #fff !important; /* Ensured white text for links in dark mode */
+    background-color: #17a2b8; /* Can remain the same or be adjusted */
+    border-color: #17a2b8;
+}
+
+body.dark-theme .btn-info:hover {
+    color: #fff !important; /* Ensured white text for links on hover in dark mode */
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+/* High Contrast Adjustments for new .btn styles */
+.high-contrast .btn {
+    color: ButtonText !important;
+    background-color: ButtonFace !important;
+    border: 2px solid ButtonText !important;
+    padding: 0.4rem 0.9rem !important;
+}
+
+.high-contrast .btn:hover {
+    background-color: Highlight !important;
+    color: HighlightText !important;
+    border-color: Highlight !important;
+}
+
+.high-contrast .btn-secondary {
+    /* Ensure secondary button also has high contrast */
+    color: #fff !important; /* Changed from ButtonText to #fff */
+    background-color: ButtonFace !important; 
+    border: 2px dashed ButtonText !important; /* Dashed to differentiate */
+}
+
+.high-contrast .btn-secondary:hover {
+    background-color: Highlight !important;
+    color: HighlightText !important;
+    border-color: Highlight !important;
+}
+
+.high-contrast .btn-info {
+    /* Ensure info button also has high contrast */
+    color: #fff !important; /* Changed from ButtonText to #fff */
+    background-color: ButtonFace !important;
+    border: 2px dotted ButtonText !important; /* Dotted to differentiate */
+}
+
+.high-contrast .btn-info:hover {
+    background-color: Highlight !important;
+    color: HighlightText !important;
+    border-color: Highlight !important;
+}
+
 /* Keep specific button styles if needed, e.g., submit buttons */
 form button[type="submit"] {
     background-color: var(--text-link); /* Use link color for primary actions */
@@ -1075,6 +1216,20 @@ body.dark-theme .catalog-controls {
 
     transition: border-color 0.2s ease, background-color 0.2s ease;
     text-align: right;
+}
+
+/* Increase padding, margin, and border for the category filter */
+#category-filter {
+    padding: 10px 35px 10px 15px; /* Increased padding */
+    margin: 5px; /* Added margin */
+    border: 2px solid var(--border-color-input); /* Increased border */
+    width: 250px; /* Added specific width to make it wider */
+}
+
+/* Apply left alignment and padding to options in all select dropdowns within catalog-controls */
+.catalog-controls select option {
+    text-align: left; 
+    padding-left: 10px; 
 }
 
 .catalog-controls select:hover {
@@ -3052,3 +3207,72 @@ body.dark-theme .brands-list li {
 }
 
 /* Make sure there are no other unclosed blocks above */
+
+/* Styling for the header sitemap link */
+.header-sitemap-link {
+    margin-left: 10px; /* Add some space to the left */
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text-color);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Ensure it aligns well with other header items */
+    display: inline-flex; /* Or inline-block, depending on alignment needs */
+    align-items: center;
+}
+
+.header-sitemap-link:hover {
+    background-color: var(--accent-color);
+    color: var(--header-bg-color); /* Or a contrasting color for text on hover */
+}
+
+body.dark-theme .header-sitemap-link {
+    color: var(--text-color-dark);
+}
+
+body.dark-theme .header-sitemap-link:hover {
+    background-color: var(--accent-color-dark);
+    color: var(--header-bg-color-dark);
+}
+
+body.high-contrast .header-sitemap-link {
+    color: var(--text-color-high-contrast);
+    border: 1px solid var(--text-color-high-contrast);
+}
+
+body.high-contrast .header-sitemap-link:hover {
+    background-color: var(--text-color-high-contrast);
+    color: var(--bg-color-high-contrast);
+}
+
+/* Styling for the header sitemap link - TEMPORARILY RENAMED */
+.header-sitemap-link-old-temp {
+    margin-left: 10px; /* Add some space to the left */
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text-color);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Ensure it aligns well with other header items */
+    display: inline-flex; /* Or inline-block, depending on alignment needs */
+    align-items: center;
+}
+
+.header-sitemap-link-old-temp:hover {
+    background-color: var(--accent-color);
+    color: var(--header-bg-color); /* Or a contrasting color for text on hover */
+}
+
+body.dark-theme .header-sitemap-link-old-temp {
+    color: var(--text-color-dark);
+}
+
+body.dark-theme .header-sitemap-link-old-temp:hover {
+    background-color: var(--accent-color-dark);
+    color: var(--header-bg-color-dark);
+}
+
+body.high-contrast .header-sitemap-link-old-temp {
+    color: var(--text-color-high-contrast);
+    border: 1px solid var(--text-color-high-contrast);
+}
