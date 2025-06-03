@@ -1,309 +1,314 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const products = [
-        {
-            id: 1,
-            name: "Процессор AMD Ryzen 5 5600G",
-            price: 15000,
-            description: "Отличный процессор со встроенной графикой.",
-            imageUrl: "https://c1.neweggimages.com/ProductImageCompressAll1280/19-113-683-V01.jpg",
-            brand: "AMD",
-            category: "Процессор",
-            characteristics: {
-                "Сокет": "AM4",
-                "Количество ядер": "6",
-                "Количество потоков": "12",
-                "Базовая частота": "3.9 ГГц",
-                "Турбо частота": "4.4 ГГц",
-                "Встроенная графика": "Radeon Vega 7",
-                "Техпроцесс": "7 нм"
-            }
+// Глобальный массив товаров, доступный другим скриптам
+window.products = [
+    {
+        id: 1,
+        name: "Игровой ПК \"Норд\", Intel Core i5, RTX 3060, 16GB RAM, 1TB SSD",
+        category: "Готовые сборки ПК",
+        brand: "Custom Build",
+        price: 85500,
+        originalPrice: 95000,
+        image: "rtx3060.png",
+        description: "Мощный игровой компьютер для современных игр в Full HD и 2K разрешении.",
+        featured: true,
+        characteristics: {
+            "Процессор": "Intel Core i5-12400F",
+            "Видеокарта": "NVIDIA GeForce RTX 3060 12GB",
+            "Оперативная память": "16GB DDR4 3200MHz",
+            "Накопитель": "1TB NVMe SSD",
+            "Материнская плата": "B660 Chipset",
+            "Блок питания": "650W 80+ Bronze"
         },
-        {
-            id: 2,
-            name: "Видеокарта NVIDIA RTX 3060",
-            price: 35000,
-            description: "Производительная видеокарта для современных игр.",
-            imageUrl: "rtx3060.png",
-            brand: "NVIDIA",
-            category: "Видеокарта",
-            characteristics: {
-                "Объем памяти": "12 ГБ",
-                "Тип памяти": "GDDR6",
-                "Шина памяти": "192 бит",
-                "Интерфейс": "PCI Express 4.0",
-                "Рекомендуемый БП": "550 Вт",
-                "Разъемы": "HDMI, DisplayPort"
-            }
+        stock: 10
+    },
+    {
+        id: 2,
+        name: "Мышь Razer DeathAdder V2",
+        category: "Периферия",
+        brand: "Razer",
+        price: 4500,
+        image: "Мышь Razer DeathAdder V2.jpg",
+        description: "Эргономичная игровая мышь с оптическим сенсором Focus+.",
+        featured: false,
+        characteristics: {
+            "Тип сенсора": "Оптический, Razer Focus+",
+            "Разрешение": "20000 DPI",
+            "Количество кнопок": "8",
+            "Подсветка": "Razer Chroma RGB"
         },
-        {
-            id: 3,
-            name: "Оперативная память Kingston 16GB DDR4",
-            price: 7000,
-            description: "Высокопроизводительная оперативная память.",
-            imageUrl: "Оперативная память Kingston 16GB DDR4.jpg",
-            brand: "Kingston",
-            category: "Оперативная память",
-            characteristics: {
-                "Объем": "16 ГБ (2x8 ГБ)",
-                "Тип": "DDR4",
-                "Частота": "3200 МГц",
-                "Тайминги": "CL16",
-                "Напряжение": "1.35 В",
-                "Радиаторы": "Есть"
-            }
+        stock: 25
+    },
+    {
+        id: 3,
+        name: "Монитор AOC 24G2",
+        category: "Мониторы",
+        brand: "AOC",
+        price: 18000,
+        image: "Монитор AOC 24G2.png",
+        description: "23.8-дюймовый игровой монитор с IPS матрицей и частотой обновления 144 Гц.",
+        featured: true,
+        characteristics: {
+            "Диагональ": "23.8 дюйма",
+            "Матрица": "IPS",
+            "Разрешение": "1920x1080 (Full HD)",
+            "Частота обновления": "144 Гц",
+            "Время отклика": "1 мс (MPRT)"
         },
-        {
-            id: 5,
-            name: "Материнская плата ASUS PRIME Z690-P",
-            price: 18000,
-            description: "Современная материнская плата с поддержкой DDR5.",
-            imageUrl: "Материнская плата ASUS PRIME Z690-P.jpg",
-            brand: "ASUS",
-            category: "Материнская плата",
-            characteristics: {
-                "Сокет": "LGA1700",
-                "Чипсет": "Intel Z690",
-                "Тип памяти": "DDR5",
-                "Форм-фактор": "ATX",
-                "Слоты PCI-E": "1 x PCIe 5.0 x16",
-                "Разъемы M.2": "3"
-            }
+        stock: 0
+    },
+    {
+        id: 4,
+        name: "Клавиатура HyperX Alloy Origins Core",
+        category: "Периферия",
+        brand: "HyperX",
+        price: 7200,
+        image: "HyperX Alloy Origins Core.webp",
+        description: "Механическая игровая клавиатура с переключателями HyperX Red.",
+        featured: false,
+        characteristics: {
+            "Тип клавиатуры": "Механическая",
+            "Переключатели": "HyperX Red (линейные)",
+            "Подсветка": "RGB",
+            "Материал корпуса": "Алюминий"
         },
-        {
-            id: 6,
-            name: "Клавиатура Logitech G Pro",
-            price: 9000,
-            description: "Механическая игровая клавиатура.",
-            imageUrl: "https://resource.logitechg.com/w_692,c_limit,q_auto,f_auto,dpr_2.0/d_transparent.gif/content/dam/gaming/en/products/pro-keyboard/pro-keyboard-gallery/us-pro-gaming-keyboard-gallery-topdown.png",
-            brand: "Logitech",
-            category: "Клавиатура",
-            characteristics: {
-                "Тип": "Механическая",
-                "Переключатели": "GX Blue Clicky (или другие)",
-                "Подсветка": "RGB LIGHTSYNC",
-                "Подключение": "USB",
-                "Формат": "TKL (без цифрового блока)"
-            }
+        stock: 15
+    },
+    {
+        id: 5,
+        name: "Наушники Sony WH-1000XM4",
+        category: "Аудио",
+        brand: "Sony",
+        price: 28000,
+        image: "Наушники Sony WH-1000XM4.jpg",
+        description: "Беспроводные наушники с активным шумоподавлением.",
+        featured: false,
+        characteristics: {
+            "Тип": "Полноразмерные, закрытые",
+            "Подключение": "Bluetooth, NFC, аудиокабель",
+            "Шумоподавление": "Активное (HD Noise Cancelling Processor QN1)",
+            "Время работы": "До 30 часов"
         },
-        {
-            id: 7,
-            name: "Мышь Razer DeathAdder V2",
-            price: 5000,
-            description: "Эргономичная игровая мышь с высокой точностью.",
-            imageUrl: "Мышь Razer DeathAdder V2.jpg",
-            brand: "Razer",
-            category: "Мышь",
-            characteristics: {
-                "Сенсор": "Focus+ Optical",
-                "Разрешение": "20000 DPI",
-                "Кнопки": "8 программируемых",
-                "Переключатели": "Razer Optical",
-                "Подсветка": "Razer Chroma RGB",
-                "Вес": "82 г"
-            }
+        stock: 8
+    },
+    {
+        id: 6,
+        name: "Материнская плата ASUS PRIME Z690-P",
+        category: "Комплектующие",
+        brand: "ASUS",
+        price: 19500,
+        image: "Материнская плата ASUS PRIME Z690-P.jpg",
+        description: "Материнская плата LGA1700 для процессоров Intel 12-го поколения.",
+        characteristics: {
+            "Сокет": "LGA1700",
+            "Чипсет": "Intel Z690",
+            "Форм-фактор": "ATX",
+            "Поддержка памяти": "DDR5"
         },
-        {
-            id: 8,
-            name: "Корпус NZXT H510",
-            price: 8000,
-            description: "Стильный и компактный корпус Mid-Tower с хорошей вентиляцией.",
-            imageUrl: "Корпус NZXT H510.jpg",
-            brand: "NZXT",
-            category: "Корпус",
-            characteristics: {
-                "Форм-фактор": "ATX Mid Tower",
-                "Материал": "Сталь, Закаленное стекло",
-                "Отсеки 3.5": "2+1",
-                "Отсеки 2.5": "2+1",
-                "Разъемы USB": "1x USB 3.1 Gen 2 Type-C, 1x USB 3.1 Gen 1 Type-A",
-                "Макс. высота кулера CPU": "165 мм",
-                "Макс. длина GPU": "381 мм"
-            }
+        stock: 12
+    },
+    {
+        id: 7,
+        name: "Оперативная память Kingston Fury Beast Black 16GB DDR4 Kit",
+        category: "Комплектующие",
+        brand: "Kingston",
+        price: 6800,
+        image: "Оперативная память Kingston 16GB DDR4.jpg",
+        description: "Комплект из двух модулей по 8GB, частота 3200MHz, CL16.",
+        characteristics: {
+            "Тип памяти": "DDR4",
+            "Объем": "16GB (2x8GB)",
+            "Частота": "3200 МГц",
+            "Тайминги": "CL16"
         },
-        {
-            id: 9,
-            name: "Блок питания Corsair RM750x",
-            price: 10000,
-            description: "Надежный блок питания 750W Gold сертификации.",
-            imageUrl: "Блок питания Corsair RM750x.jpg",
-            brand: "Corsair",
-            category: "Блок питания",
-            characteristics: {
-                "Мощность": "750 Вт",
-                "Сертификат": "80 PLUS Gold",
-                "Модульный": "Полностью",
-                "Вентилятор": "135 мм (Zero RPM режим)",
-                "Разъемы": "ATX, EPS, PCIe, SATA, Peripheral"
-            }
+        stock: 30
+    },
+    {
+        id: 8,
+        name: "SSD Samsung 970 EVO Plus 1TB",
+        category: "Комплектующие",
+        brand: "Samsung",
+        price: 11000,
+        image: "SSD Samsung 970 EVO Plus 1TB.jpg",
+        description: "NVMe M.2 SSD накопитель с высокой скоростью чтения и записи.",
+        featured: true,
+        characteristics: {
+            "Форм-фактор": "M.2 2280",
+            "Интерфейс": "NVMe PCIe Gen 3.0 x4",
+            "Скорость чтения": "до 3500 МБ/с",
+            "Скорость записи": "до 3300 МБ/с"
         },
-        {
-            id: 10,
-            name: "Монитор Dell 27 S2721DGF",
-            price: 35000,
-            description: "27-дюймовый QHD игровой монитор с высокой частотой обновления.",
-            imageUrl: "Монитор Dell 27 S2721DGF.jpg",
-            brand: "Dell",
-            category: "Монитор",
-            characteristics: {
-                "Диагональ": "27 дюймов",
-                "Разрешение": "2560x1440 (QHD)",
-                "Тип матрицы": "IPS",
-                "Частота обновления": "165 Гц",
-                "Время отклика": "1 мс (GtG)",
-                "Поддержка G-Sync/FreeSync": "FreeSync Premium Pro, G-Sync Compatible"
-            }
+        stock: 18
+    },
+    {
+        id: 9,
+        name: "Блок питания Corsair RM750x (750W)",
+        category: "Комплектующие",
+        brand: "Corsair",
+        price: 9200,
+        image: "Блок питания Corsair RM750x.jpg",
+        description: "Модульный блок питания 750W с сертификатом 80 PLUS Gold.",
+        characteristics: {
+            "Мощность": "750 Вт",
+            "Сертификат": "80 PLUS Gold",
+            "Модульность": "Полностью модульный"
         },
-        {
-            id: 11,
-            name: "Гарнитура HyperX Cloud II",
-            price: 7500,
-            description: "Популярная игровая гарнитура с отличным звуком.",
-            imageUrl: "HyperX Cloud II.jpg",
-            brand: "HyperX",
-            category: "Гарнитура",
-            characteristics: {
-                "Тип": "Накладные, закрытые",
-                "Подключение": "USB / 3.5 мм",
-                "Виртуальный звук": "7.1 Surround Sound (через USB-адаптер)",
-                "Микрофон": "Съемный, с шумоподавлением"
-            }
+        stock: 7
+    },
+    {
+        id: 10,
+        name: "Корпус NZXT H510 Flow",
+        category: "Комплектующие",
+        brand: "NZXT",
+        price: 7000,
+        image: "Корпус NZXT H510.jpg",
+        description: "Компактный Mid-Tower корпус с хорошей вентиляцией.",
+        characteristics: {
+            "Типоразмер": "Mid-Tower",
+            "Материал": "Сталь, закаленное стекло",
+            "Поддержка мат. плат": "ATX, Micro-ATX, Mini-ITX"
         },
-        {
-            id: 12,
-            name: "Веб-камера Logitech C920",
-            price: 6000,
-            description: "Full HD веб-камера для стримов и видеоконференций.",
-            imageUrl: "https://resource.logitech.com/content/dam/logitech/en/products/webcams/c920s/gallery/c920s-gallery-1.png",
-            brand: "Logitech",
-            category: "Веб-камера",
-            characteristics: {
-                "Разрешение видео": "1080p / 30 fps, 720p / 30 fps",
-                "Разрешение фото": "15 Мп (с интерполяцией)",
-                "Фокусировка": "Автофокус",
-                "Угол обзора": "78°",
-                "Микрофон": "Стерео",
-                "Крепление": "Универсальное"
-            }
+        stock: 0
+    },
+    {
+        id: 11,
+        name: "Игровой ноутбук ASUS ROG Strix G15",
+        category: "Ноутбуки",
+        brand: "ASUS",
+        price: 125000,
+        originalPrice: 135000,
+        image: "placeholder-image.png",
+        description: "Мощный игровой ноутбук с Ryzen 9 и RTX 3070.",
+        featured: true,
+        characteristics: {
+            "Процессор": "AMD Ryzen 9 5900HX",
+            "Видеокарта": "NVIDIA GeForce RTX 3070 Laptop",
+            "Экран": "15.6 Full HD 144Hz",
+            "Оперативная память": "16GB DDR4",
+            "Накопитель": "1TB NVMe SSD"
         },
-        {
-            id: 13,
-            name: "Жесткий диск Seagate 2TB",
-            price: 5500,
-            description: "Вместительный HDD для хранения больших объемов данных.",
-            imageUrl: "https://m.media-amazon.com/images/I/41X3wiuUlSL._AC_.jpg",
-            brand: "Seagate",
-            category: "HDD",
-            characteristics: {
-                "Объем": "2 ТБ",
-                "Форм-фактор": "3.5",
-                "Интерфейс": "SATA III (6 Гбит/с)",
-                "Скорость вращения": "7200 об/мин",
-                "Кэш-память": "256 МБ"
-            }
+        stock: 5
+    },
+    {
+        id: 12,
+        name: "Смартфон Apple iPhone 14 Pro",
+        category: "Смартфоны",
+        brand: "Apple",
+        price: 110000,
+        image: "placeholder-image.png",
+        description: "Последняя модель iPhone с улучшенной камерой и дисплеем ProMotion.",
+        characteristics: {
+            "Дисплей": "6.1 Super Retina XDR, ProMotion",
+            "Процессор": "A16 Bionic",
+            "Камера": "48МП основная + 12МП сверхширокоугольная + 12МП телефото",
+            "Память": "256GB"
         },
-        {
-            id: 14,
-            name: "Процессор AMD Ryzen 7 5800X",
-            price: 28000,
-            description: "Мощный 8-ядерный процессор для игр и работы.",
-            imageUrl: "https://c1.neweggimages.com/ProductImageCompressAll1280/19-113-665-V01.jpg",
-            brand: "AMD",
-            category: "Процессор",
-            characteristics: {
-                "Сокет": "AM4",
-                "Количество ядер": "8",
-                "Количество потоков": "16",
-                "Базовая частота": "3.8 ГГц",
-                "Турбо частота": "4.7 ГГц",
-                "Техпроцесс": "7 нм",
-                "Тепловыделение (TDP)": "105 Вт"
-            }
+        stock: 20
+    },
+    {
+        id: 13,
+        name: "Планшет Samsung Galaxy Tab S8",
+        category: "Планшеты",
+        brand: "Samsung",
+        price: 65000,
+        image: "Samsung Galaxy Tab S8.webp",
+        description: "Производительный планшет на Android с поддержкой S Pen.",
+        characteristics: {
+            "Дисплей": "11 LTPS TFT, 120Hz",
+            "Процессор": "Snapdragon 8 Gen 1",
+            "Память": "8GB RAM, 128GB Storage",
+            "Батарея": "8000 mAh"
         },
-        {
-            id: 15,
-            name: "Видеокарта NVIDIA RTX 3070",
-            price: 50000,
-            description: "Высокопроизводительная видеокарта для 2K и 4K гейминга.",
-            imageUrl: "https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3070/geforce-rtx-3070-shop-600-p@2x.png",
-            brand: "NVIDIA",
-            category: "Видеокарта",
-            characteristics: {
-                "Объем памяти": "8 ГБ",
-                "Тип памяти": "GDDR6",
-                "Шина памяти": "256 бит",
-                "Интерфейс": "PCI Express 4.0",
-                "Рекомендуемый БП": "650 Вт",
-                "Разъемы": "HDMI, DisplayPort"
-            }
+        stock: 10
+    },
+    {
+        id: 14,
+        name: "Экшн-камера GoPro HERO11 Black",
+        category: "Фото и видео",
+        brand: "GoPro",
+        price: 42000,
+        image: "GoPro HERO11 Black.webp",
+        description: "Новая экшн-камера с улучшенной стабилизацией и качеством видео.",
+        characteristics: {
+            "Видео": "5.3K60, 4K120",
+            "Фото": "27MP",
+            "Стабилизация": "HyperSmooth 5.0",
+            "Водонепроницаемость": "до 10м"
         },
-        {
-            id: 16,
-            name: "Кулер Cooler Master Hyper 212 EVO",
-            price: 3000,
-            description: "Эффективный и тихий кулер для процессора.",
-            imageUrl: "Кулер Cooler Master Hyper 212 EVO.jpg",
-            brand: "Cooler Master",
-            category: "Кулер",
-            characteristics: {
-                "Совместимость (сокеты)": "Intel LGA1700/1200/115x, AMD AM4/AM5",
-                "Материал радиатора": "Алюминий",
-                "Тепловые трубки": "4",
-                "Размер вентилятора": "120 мм",
-                "Скорость вращения": "600-1600 об/мин"
-            }
+        stock: 0
+    },
+    {
+        id: 15,
+        name: "Роутер Keenetic Giga (KN-1011)",
+        category: "Сетевое оборудование",
+        brand: "Keenetic",
+        price: 8500,
+        image: "Keenetic Giga (KN-1011).webp",
+        description: "Двухдиапазонный гигабитный интернет-центр с Wi-Fi AC1300.",
+        characteristics: {
+            "Стандарт Wi-Fi": "802.11ac Wave 2 (Wi-Fi 5)",
+            "Частотные диапазоны": "2.4 ГГц, 5 ГГц",
+            "Скорость портов WAN/LAN": "1 Гбит/с",
+            "USB-порт": "Да, 3.0"
         },
-        {
-            id: 18,
-            name: "Материнская плата MSI MPG B550 GAMING PLUS",
-            price: 14000,
-            description: "Надежная материнская плата для процессоров AMD Ryzen.",
-            imageUrl: "Материнская плата MSI MPG B550 GAMING PLUS.png",
-            brand: "MSI",
-            category: "Материнская плата",
-            characteristics: {
-                "Сокет": "AM4",
-                "Чипсет": "AMD B550",
-                "Тип памяти": "DDR4",
-                "Форм-фактор": "ATX",
-                "Слоты PCI-E": "1 x PCIe 4.0 x16, 1 x PCIe 3.0 x16",
-                "Разъемы M.2": "2"
-            }
+        stock: 22
+    },
+    {
+        id: 16,
+        name: "Новый Продукт 16 (Монитор)",
+        category: "Мониторы",
+        brand: "Dell",
+        price: 16000,
+        image: "Монитор Dell 27 S2721DGF.jpg",
+        description: "Описание для нового продукта 16.",
+        featured: false,
+        characteristics: {
+            "Параметр1": "Значение1",
+            "Параметр2": "Значение2"
         },
-        {
-            id: 19,
-            name: "Монитор AOC 24G2",
-            price: 18000,
-            description: "24-дюймовый игровой IPS монитор, 144Hz.",
-            imageUrl: "Монитор AOC 24G2.png",
-            brand: "AOC",
-            category: "Монитор",
-            characteristics: {
-                "Диагональ": "23.8 дюйма",
-                "Разрешение": "1920x1080 (Full HD)",
-                "Тип матрицы": "IPS",
-                "Частота обновления": "144 Гц",
-                "Время отклика": "1 мс (MPRT)",
-                "Поддержка FreeSync": "FreeSync Premium"
-            }
+        stock: 16
+    },
+    {
+        id: 17,
+        name: "Супер Гаджет 17 (Кулер)",
+        category: "Комплектующие",
+        brand: "Cooler Master",
+        price: 17700,
+        image: "Кулер Cooler Master Hyper 212 EVO.jpg",
+        description: "Удивительный новый гаджет номер 17.",
+        featured: true,
+        characteristics: {
+            "ФункцияX": "Есть",
+            "Батарея": "Долгоиграющая"
         },
-        {
-            id: 20,
-            name: "Наушники Sony WH-1000XM4",
-            price: 25000,
-            description: "Премиальные наушники с лучшим шумоподавлением.",
-            imageUrl: "Наушники Sony WH-1000XM4.jpg",
-            brand: "Sony",
-            category: "Наушники",
-            characteristics: {
-                "Тип": "Полноразмерные, закрытые",
-                "Подключение": "Bluetooth 5.0 / 3.5 мм",
-                "Шумоподавление": "Активное (ANC)",
-                "Время работы": "До 30 ч (с ANC)",
-                "Кодеки": "SBC, AAC, LDAC"
-            }
-        }
-    ];
+        stock: 17
+    },
+    {
+        id: 18,
+        name: "Последнее Устройство 18 (Мат. плата)",
+        category: "Комплектующие",
+        brand: "MSI",
+        price: 18500,
+        image: "Материнская плата MSI MPG B550 GAMING PLUS.png",
+        description: "Самое последнее устройство в нашем каталоге (18).",
+        featured: false,
+        characteristics: {
+            "Особенность": "Уникальная",
+            "Размер": "Компактный"
+        },
+        stock: 0 
+    }
+];
 
+document.addEventListener('DOMContentLoaded', () => {
+    const productListContainer = document.getElementById('product-list');
+    const featuredProductsContainer = document.getElementById('featured-products-list');
+    const categoryFilter = document.getElementById('category-filter');
+    const brandFilter = document.getElementById('brand-filter');
+    const priceRange = document.getElementById('price-range');
+    const priceRangeValue = document.getElementById('price-range-value');
+    const sortOrder = document.getElementById('sort-order');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
     const productList = document.getElementById('product-list');
     const sortSelect = document.getElementById('sort');
     const brandFilterSelect = document.getElementById('brand-filter');
@@ -322,61 +327,193 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     const itemsPerPage = 6;
 
-    function renderProducts(container, productArray, isFeatured = false) {
-        if (!container) return;
-        container.innerHTML = '';
-        
-        if (productArray.length === 0 && !isFeatured) {
-            if (container.id === 'product-list') { 
-                const message = currentSearchTerm ? 'Товары не найдены.' : 'Нет товаров, соответствующих фильтрам.';
-                container.innerHTML = `<p class="catalog-empty-message">${message}</p>`;
+    const lazyLoadCallback = (entries, observer) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                let lazyImage = entry.target;
+                if (typeof lazyImage.dataset.src === 'string' && lazyImage.dataset.src.trim() !== '') {
+                    lazyImage.src = lazyImage.dataset.src;
+                }
+                lazyImage.classList.remove('lazy');
+                lazyImage.classList.add('lazy-loaded');
+                observer.unobserve(lazyImage);
+            }
+        });
+    };
+
+    const initializeLazyObserver = () => {
+        if (lazyImageObserver || !('IntersectionObserver' in window)) {
+            if (!('IntersectionObserver' in window)) {
+                const lazyImages = document.querySelectorAll('img.lazy');
+                lazyImages.forEach((lazyImage) => {
+                    if (typeof lazyImage.dataset.src === 'string' && lazyImage.dataset.src.trim() !== '') {
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.remove('lazy');
+                        lazyImage.classList.add('lazy-loaded');
+                    } else if (lazyImage.src && lazyImage.classList.contains('lazy')) {
+                        lazyImage.classList.remove('lazy');
+                        lazyImage.classList.add('lazy-loaded');
+                    }
+                });
             }
             return;
         }
-        
-        productArray.forEach(product => {
-            const productCardWrapper = document.createElement('div');
-            productCardWrapper.className = 'product-card-link-wrapper';
-            productCardWrapper.dataset.productId = product.id;
+        lazyImageObserver = new IntersectionObserver(lazyLoadCallback);
+        const lazyImages = document.querySelectorAll('img.lazy');
+        lazyImages.forEach((lazyImage) => {
+            lazyImageObserver.observe(lazyImage);
+        });
+    };
 
-            const productCard = document.createElement('article');
-            productCard.className = 'product-card';
-            
-            productCard.addEventListener('click', (event) => {
-                if (event.target.tagName.toLowerCase() !== 'button') {
-                    showProductDetails(product.id);
+    function updateCartCountDisplay() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountSpanHeader = document.getElementById('cart-item-count-header');
+        if (cartCountSpanHeader) {
+            cartCountSpanHeader.textContent = totalItems;
+        }
+    }
+    window.updateCartCountDisplay = updateCartCountDisplay;
+
+    // НОВАЯ ФУНКЦИЯ для обновления отображения ОДНОГО товара в каталоге
+    function updateProductDisplayInCatalog(productId) {
+        const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+        if (!productCard) {
+            // Карточка товара может быть не видна (например, на другой странице пагинации или отфильтрована)
+            return;
+        }
+
+        const product = window.products.find(p => p.id === productId);
+        if (!product) {
+            console.error(`[updateProductDisplayInCatalog] Product with id ${productId} not found in window.products.`);
+            return;
+        }
+
+        const stockElement = productCard.querySelector('.product-stock');
+        const addToCartButton = productCard.querySelector('.add-to-cart-btn');
+
+        if (stockElement) {
+            if (typeof product.stock !== 'undefined') {
+                if (product.stock > 0) {
+                    stockElement.innerHTML = `<p class="product-stock in-stock">В наличии: ${product.stock} шт.</p>`;
+                    stockElement.className = 'product-stock in-stock'; // Убедимся, что класс правильный
+                } else {
+                    stockElement.innerHTML = `<p class="product-stock out-of-stock">Нет в наличии</p>`;
+                    stockElement.className = 'product-stock out-of-stock';
                 }
-            });
+            } else {
+                stockElement.innerHTML = `<p class="product-stock unknown-stock">Наличие уточняется</p>`;
+                stockElement.className = 'product-stock unknown-stock';
+            }
+        }
+
+        if (addToCartButton) {
+            if (product.stock > 0) {
+                addToCartButton.textContent = 'Добавить в корзину';
+                addToCartButton.disabled = false;
+            } else {
+                addToCartButton.textContent = 'Нет в наличии';
+                addToCartButton.disabled = true;
+            }
+        }
+    }
+    window.updateProductDisplayInCatalog = updateProductDisplayInCatalog; // Делаем доступной глобально
+
+    function renderProducts(container, productArray, isFeatured = false) {
+        if (!container) return;
+        container.innerHTML = '';
+        const productsToRender = isFeatured ? productArray.filter(p => p.featured).slice(0, 4) : productArray;
+
+        if (productsToRender.length === 0 && !isFeatured) {
+            container.innerHTML = '<p class="no-products-message">Товары не найдены. Попробуйте изменить критерии фильтрации.</p>';
+            return;
+        }
+        if (productsToRender.length === 0 && isFeatured) {
+             container.innerHTML = '<p class="no-products-message">Рекомендуемые товары скоро появятся!</p>';
+            return;
+        }
+
+        productsToRender.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.dataset.productId = product.id;
+            productCard.classList.add('product-card-visible'); // Start as visible
+
+            let priceHTML = `<p class="product-price">${product.price.toLocaleString('ru-RU')} ₽</p>`;
+            if (product.originalPrice && product.originalPrice > product.price) {
+                priceHTML = `
+                    <p class="product-price">
+                        <span class="current-price">${product.price.toLocaleString('ru-RU')} ₽</span>
+                        <span class="original-price">${product.originalPrice.toLocaleString('ru-RU')} ₽</span>
+                    </p>`;
+            }
+
+            let stockStatusHTML = '';
+            let addToCartButtonDisabled = false;
+            let addToCartButtonText = 'Добавить в корзину';
+
+            if (typeof product.stock !== 'undefined') {
+                if (product.stock > 0) {
+                    stockStatusHTML = `<p class="product-stock in-stock">В наличии: ${product.stock} шт.</p>`;
+                } else {
+                    stockStatusHTML = `<p class="product-stock out-of-stock">Нет в наличии</p>`;
+                    addToCartButtonDisabled = true;
+                    addToCartButtonText = 'Нет в наличии';
+                }
+            } else {
+                stockStatusHTML = `<p class="product-stock unknown-stock">Наличие уточняется</p>`;
+            }
+
+            // Используем product.image напрямую, если это полный путь или имя файла в той же директории
+            // Если у вас изображения в подпапке, например 'images/', то будет: `images/${product.image}`
+            const imageUrl = product.image; // Предполагаем, что product.image содержит корректный путь или имя файла
 
             productCard.innerHTML = `
-                <img data-src="${product.imageUrl}" alt="${product.name}" class="product-image lazy">
-                <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
-                <p class="product-price">Цена: ${product.price}₽</p>
-                <button data-product-id="${product.id}">В корзину</button>
+                <a href="#" class="product-card-link" data-id="${product.id}">
+                    <div class="product-image-container">
+                        <img src="${imageUrl}" alt="${product.name}" class="product-image lazy" loading="lazy">
+                    </div>
+                    <h3>${product.name}</h3>
+                </a>
+                <p class="product-category">Категория: ${product.category}</p>
+                <p class="product-description">${product.description.substring(0,100)}${product.description.length > 100 ? '...' : ''}</p>
+                ${priceHTML}
+                ${stockStatusHTML} 
+                <div class="product-card-actions">
+                    <button class="add-to-cart-btn" data-id="${product.id}" ${addToCartButtonDisabled ? 'disabled' : ''}>
+                        ${addToCartButtonText}
+                    </button>
+                     <button class="details-btn" data-id="${product.id}">Подробнее</button>
+                </div>
             `;
+            container.appendChild(productCard);
 
-            productCardWrapper.appendChild(productCard);
-
-            container.appendChild(productCardWrapper);
-
-            const button = productCard.querySelector('button');
-            if(button) {
-                button.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    const productId = parseInt(event.target.getAttribute('data-product-id'));
+            // Add event listeners for the new buttons
+            const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent card link navigation
+                    const productId = parseInt(event.target.dataset.id);
                     addToCart(productId);
                 });
             }
 
-            requestAnimationFrame(() => {
-                productCardWrapper.classList.add('product-card-visible');
-            });
+            const detailsBtn = productCard.querySelector('.details-btn');
+            if (detailsBtn) {
+                detailsBtn.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent card link navigation
+                    const productId = parseInt(event.target.dataset.id);
+                    showProductDetails(productId);
+                });
+            }
 
-            const newImage = productCardWrapper.querySelector('img.lazy');
-            if (lazyImageObserver && newImage) {
-                lazyImageObserver.observe(newImage);
+            const productLink = productCard.querySelector('.product-card-link');
+            if (productLink) {
+                productLink.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default link behavior
+                    const productId = parseInt(event.currentTarget.dataset.id);
+                    showProductDetails(productId);
+                });
             }
         });
     }
@@ -384,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateBrandFilter() {
         if (!brandFilterSelect) return;
         const availableProducts = currentSearchTerm
-            ? products.filter(product => 
+            ? window.products.filter(product => 
                 product.name.toLowerCase().includes(currentSearchTerm) || 
                 product.description.toLowerCase().includes(currentSearchTerm) ||
                 product.brand?.toLowerCase().includes(currentSearchTerm) ||
@@ -393,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     String(val).toLowerCase().includes(currentSearchTerm)
                 ))
             )
-            : products;
+            : window.products;
 
         const brands = [...new Set(availableProducts.map(product => product.brand).filter(brand => brand))];
         brands.sort();
@@ -411,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateCategoryFilter() {
         if (!categoryFilterSelect) return;
         const availableProducts = currentSearchTerm
-            ? products.filter(product => 
+            ? window.products.filter(product => 
                 product.name.toLowerCase().includes(currentSearchTerm) || 
                 product.description.toLowerCase().includes(currentSearchTerm) ||
                 product.brand?.toLowerCase().includes(currentSearchTerm) ||
@@ -420,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     String(val).toLowerCase().includes(currentSearchTerm)
                 ))
             )
-            : products;
+            : window.products;
 
         const categories = [...new Set(availableProducts.map(product => product.category).filter(cat => cat))];
         categories.sort();
@@ -503,6 +640,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCatalog() {
         if (!productList || !sortSelect || !brandFilterSelect || !categoryFilterSelect || !priceRangeInput || !priceRangeValueSpan) return;
 
+        console.log('[DEBUG] Initial window.products length:', window.products.length);
+
         if (catalogSearchInfo) {
              if (currentSearchTerm) {
                  const displayTerm = searchInputHeader?.value || currentSearchTerm;
@@ -519,7 +658,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxPrice = parseInt(priceRangeInput.value);
         const sortValue = sortSelect.value;
 
-        let filteredProducts = products;
+        console.log('[DEBUG] maxPrice used for filtering:', maxPrice);
+
+        let filteredProducts = window.products;
         if (currentSearchTerm) {
             filteredProducts = filteredProducts.filter(product => 
                 product.name.toLowerCase().includes(currentSearchTerm) ||
@@ -553,47 +694,79 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const totalMatchingItems = sortedProducts.length;
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const productsToDisplay = sortedProducts.slice(startIndex, endIndex);
+        const productsToDisplay = sortedProducts;
 
-        const currentCards = productList.querySelectorAll('.product-card-link-wrapper');
-        const finalVisibleProductIds = new Set(productsToDisplay.map(p => p.id));
-        const cardsToRemove = [];
-        
-        currentCards.forEach(cardWrapper => {
-            const cardProductId = parseInt(cardWrapper.dataset.productId);
-            if (!finalVisibleProductIds.has(cardProductId)) {
-                cardsToRemove.push(cardWrapper);
-            }
-        });
+        console.log('[DEBUG] totalMatchingItems after filtering:', totalMatchingItems);
+        const calculatedTotalPages = Math.ceil(totalMatchingItems / itemsPerPage);
+        console.log('[DEBUG] calculatedTotalPages:', calculatedTotalPages);
+        console.log('[DEBUG] Displaying ALL ' + productsToDisplay.length + ' matching products without pagination.');
 
         renderProducts(productList, productsToDisplay, false);
-
-        renderPaginationControls(totalMatchingItems);
+        initializeLazyObserver();
     }
 
     function renderFeaturedProducts() {
         if (!featuredProductGrid) return;
-        const featured = products.slice(0, 3);
+        const featured = window.products.slice(0, 3);
         renderProducts(featuredProductGrid, featured, true);
+        initializeLazyObserver();
     }
 
-    function addToCart(id) {
-        const product = products.find(p => p.id === id);
-        if (product) {
-            const existingCartItemIndex = cart.findIndex(item => item.id === id);
-            if (existingCartItemIndex > -1) {
-                cart[existingCartItemIndex].quantity = (cart[existingCartItemIndex].quantity || 1) + 1;
-            } else {
-                cart.push({...product, quantity: 1});
-            }
-        localStorage.setItem('cart', JSON.stringify(cart));
-            showToastNotification(`${product.name} добавлен в корзину!`);
-            if (window.updateCartCountDisplay) {
-                window.updateCartCountDisplay();
+    function addToCart(id, quantityToAdd = 1) {
+        const product = window.products.find(p => p.id === id);
+        if (!product) {
+            console.error(`[addToCart] Product with id ${id} not found.`);
+            showToastNotification('Ошибка: Товар не найден.');
+            return;
+        }
+
+        const existingCartItemIndex = cart.findIndex(item => item.id === id);
+        const currentQuantityInCart = existingCartItemIndex > -1 ? cart[existingCartItemIndex].quantity : 0;
+
+        // Проверяем, достаточно ли товара на складе для ДОБАВЛЕНИЯ quantityToAdd
+        // (с учетом того, что может быть уже что-то в корзине, но addToCart с карточки товара всегда добавляет +1 к тому, что уже ЕСТЬ на складе)
+        // Эта функция вызывается с карточки товара (всегда quantityToAdd=1) или из модалки (тоже quantityToAdd=1)
+        // Логика для изменения количества УЖЕ В КОРЗИНЕ будет в cart.js
+        if (typeof product.stock !== 'number' || product.stock < quantityToAdd) {
+            showToastNotification(`К сожалению, товара "${product.name}" недостаточно на складе (осталось ${product.stock || 0}).`);
+            // Обновляем отображение на всякий случай, если stock изменился другим путем
+            if(window.updateProductDisplayInCatalog) window.updateProductDisplayInCatalog(id);
+            return;
+        }
+        
+        // Если товар уже в корзине, и мы пытаемся добавить еще, проверяем не превысит ли общее количество остаток
+        if (existingCartItemIndex > -1) {
+             if (product.stock < quantityToAdd) { // currentQuantityInCart + quantityToAdd > product.stock
+                showToastNotification(`Невозможно добавить ${quantityToAdd} шт. товара "${product.name}". На складе: ${product.stock}, в корзине уже: ${currentQuantityInCart}.`);
+                if(window.updateProductDisplayInCatalog) window.updateProductDisplayInCatalog(id);
+                return;
             }
         }
+
+
+        // Уменьшаем сток в глобальном window.products
+        product.stock -= quantityToAdd;
+
+        if (existingCartItemIndex > -1) {
+            cart[existingCartItemIndex].quantity += quantityToAdd;
+        } else {
+            // Важно: в корзину кладем КОПИЮ товара, но с quantity.
+            // Stock в этой копии в корзине не будет отражать реальный остаток на складе,
+            // реальный остаток будет в window.products[...].stock
+            const productForCart = { ...product }; 
+            // Удаляем stock из объекта в корзине, чтобы не было путаницы,
+            // так как актуальный stock всегда в window.products
+            // delete productForCart.stock; // Или оставляем, но не полагаемся на него в cart.js для проверок
+            productForCart.quantity = quantityToAdd;
+            cart.push(productForCart);
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        showToastNotification(`${product.name} (${quantityToAdd} шт.) добавлен в корзину! Остаток: ${product.stock} шт.`);
+        updateCartCountDisplay();
+
+        // Обновляем отображение карточки товара в каталоге
+        if(window.updateProductDisplayInCatalog) window.updateProductDisplayInCatalog(id);
     }
 
     function showToastNotification(message) {
@@ -653,6 +826,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.location.pathname.includes('catalog.html')) {
              console.error('Catalog elements (product list, filters, pagination) not found. Catalog functionality may be impaired.');
         }
+        if (document.querySelectorAll('img.lazy').length > 0) {
+           initializeLazyObserver();
+        }
     }
 
     if (searchFormHeader) {
@@ -676,7 +852,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="modal-content">
                     <button class="modal-close-btn" aria-label="Закрыть">&times;</button>
                     <div class="modal-image-column">
-                        <img src="${product.imageUrl}" alt="${product.name}" class="modal-product-image">
+                        <img src="${product.image}" alt="${product.name}" class="modal-product-image">
                     </div>
                     <div class="modal-details-column">
                         <h2 class="modal-product-name">${product.name}</h2>
@@ -696,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showProductDetails(productId) {
-        const product = products.find(p => p.id === productId);
+        const product = window.products.find(p => p.id === productId);
         if (!product) return;
 
         const modalHTML = createProductModalHTML(product);
@@ -736,39 +912,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const lazyLoadCallback = (entries, observer) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                let lazyImage = entry.target;
-                lazyImage.src = lazyImage.dataset.src;
-                lazyImage.classList.remove('lazy');
-                lazyImage.classList.add('lazy-loaded');
-                observer.unobserve(lazyImage);
-            }
-        });
-    };
+    // Scroll-to-top button logic
+    console.log('[DEBUG] scrollToTopBtn element (checked before attaching listeners):', scrollToTopBtn);
 
-    const initializeLazyObserver = () => {
-        if (lazyImageObserver || !('IntersectionObserver' in window)) {
-            if (!('IntersectionObserver' in window)) {
-                const lazyImages = document.querySelectorAll('img.lazy');
-                lazyImages.forEach((lazyImage) => {
-                    if (!lazyImage.src) {
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.remove('lazy');
-                    }
-                });
+    if (scrollToTopBtn) {
+        console.log('[DEBUG] scrollToTopBtn found, attaching scroll and click listeners.');
+        window.onscroll = function() {
+            const scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+            if (scrollTop > 100) {
+                if (scrollToTopBtn.style.display !== "block") {
+                    scrollToTopBtn.style.display = "block";
+                    console.log('[DEBUG] Setting scrollToTopBtn display to block');
+                }
+            } else {
+                if (scrollToTopBtn.style.display !== "none") {
+                    scrollToTopBtn.style.display = "none";
+                    console.log('[DEBUG] Setting scrollToTopBtn display to none');
+                }
             }
-            return;
+        };
+
+        scrollToTopBtn.addEventListener("click", function() {
+            console.log('[DEBUG] scrollToTopBtn clicked.');
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // Initial check in case the page is already scrolled down (e.g. after a refresh)
+        const initialScrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+        if (initialScrollTop > 100) {
+            scrollToTopBtn.style.display = "block";
+             console.log('[DEBUG] Initial check: Setting scrollToTopBtn display to block');
+        } else {
+            scrollToTopBtn.style.display = "none";
+            console.log('[DEBUG] Initial check: Setting scrollToTopBtn display to none');
         }
 
-        lazyImageObserver = new IntersectionObserver(lazyLoadCallback);
+    } else {
+        console.error('[DEBUG] scrollToTopBtn element NOT FOUND on this page when trying to attach listeners.');
+    }
 
-        const lazyImages = document.querySelectorAll('img.lazy');
-        lazyImages.forEach((lazyImage) => {
-            lazyImageObserver.observe(lazyImage);
-        });
-    };
-
-    initializeLazyObserver();
+    // Initial cart count update on page load
+    updateCartCountDisplay();
 });

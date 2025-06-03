@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка на покупку товара - ТехноПорт</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -33,21 +34,75 @@
     <div class="main-area-wrapper">
         <main class="content-section">
             <section>
-                <h1>Регистрация</h1>
-                <form id="register-form" method="post">
+                <h1>Заявка на покупку товара</h1>
+                <form id="productOrderForm">
                     <div>
-                        <label for="register-name">Имя:</label>
-                        <input type="text" id="register-name" name="name" placeholder="Ваше имя" required>
+                        <label for="lastName">Фамилия:</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <span class="error-message" id="lastNameError"></span>
                     </div>
+
                     <div>
-                        <label for="register-email">Email:</label>
-                        <input type="email" id="register-email" name="email" placeholder="example@example.com" required>
+                        <label for="password">Пароль:</label>
+                        <input type="password" id="password" name="password" required>
+                        <span class="error-message" id="passwordError"></span>
                     </div>
+
                     <div>
-                        <label for="register-password">Пароль:</label>
-                        <input type="password" id="register-password" name="password" placeholder="Минимум 8 символов" required minlength="8">
+                        <label for="recipientAddress">Адрес получателя:</label>
+                        <input type="text" id="recipientAddress" name="recipientAddress" style="width: 300px;">
+                         <span class="error-message" id="recipientAddressError"></span>
                     </div>
-                    <button type="submit">Зарегистрироваться</button>
+
+                    <div>
+                        <label for="productType">Тип товара:</label>
+                        <select id="productType" name="productType">
+                            <!-- Опции будут загружены динамически -->
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="productCode">Наименование товара:</label>
+                        <select id="productName" name="productName">
+                            <!-- Опции будут загружены динамически -->
+                        </select>
+                        <span class="error-message" id="productNameError"></span>
+                    </div>
+
+                    <div>
+                        <label for="quantity">Количество:</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1" style="width: 60px;">
+                        <span class="error-message" id="quantityError"></span>
+                    </div>
+
+                    <div>
+                        <label for="deliveryByCompany">Доставка транспортом:</label>
+                        <div class="radio-group-container">
+                            <div class="radio-option">
+                                <input type="radio" id="deliveryByCompany" name="deliveryMethod" value="company" checked>
+                                <label for="deliveryByCompany">фирмы</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="deliveryByOwn" name="deliveryMethod" value="own">
+                                <label for="deliveryByOwn">своим</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="cashPayment" name="cashPayment">
+                        <label for="cashPayment">Оплата наличными</label>
+                    </div>
+
+                    <div>
+                        <label for="additionalInfo">Дополнительная информация:</label>
+                        <textarea id="additionalInfo" name="additionalInfo" rows="4" style="width: 300px;"></textarea>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="submitOrder">Отправить</button>
+                        <button type="reset">Сброс</button>
+                    </div>
                 </form>
             </section>
         </main>
@@ -65,7 +120,7 @@
                 <li><a href="register.html">Регистрация</a></li>
                 <li><a href="login.html">Вход</a></li>
                 <li><a href="reviews.html">Отзывы</a></li>
-                <li><a href="product_order_form.html">Заявка на товар</a></li>
+                <li><a href="product_order_form.html" class="active">Заявка на товар</a></li>
                 <li><a href="warranty.html">Гарантия</a></li>
             </ul>
             <div class="visitor-counter">
@@ -102,12 +157,12 @@
     </footer>
 </div>
 <button id="scrollToTopBtn" title="Наверх">↑</button>
-<script defer src="script.js"></script>
+<script src="script.js"></script>
+<script defer src="product_order_form.js"></script>
 <script defer src="counter.js"></script>
 <script defer src="accessibility.js"></script>
-<script defer src="auth.js"></script>
 <script defer src="theme-switcher.js"></script>
 <script defer src="clock.js"></script>
 <script defer src="nav-highlight.js"></script>
 </body>
-</html>
+</html> 

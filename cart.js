@@ -1,19 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cartItemsContainer = document.getElementById('cart-items');
-    const cartItemCountSpan = document.getElementById('cart-item-count');
+    // const cartItemCountSpan = document.getElementById('cart-item-count'); // Old sidebar count
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+    // This function is also defined in script.js, ensure consistency or use the global one from script.js
+    // For now, let's make it consistent with the header cart count ID.
     window.updateCartCountDisplay = function() {
         const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
         let totalItems = 0;
         currentCart.forEach(item => {
-            totalItems += item.quantity || 0; // Sum up quantities
+            totalItems += item.quantity || 0;
         });
 
-        if (cartItemCountSpan) {
-            cartItemCountSpan.textContent = totalItems;
-            cartItemCountSpan.style.display = totalItems > 0 ? 'inline' : 'none';
+        const cartItemCountSpanHeader = document.getElementById('cart-item-count-header');
+        if (cartItemCountSpanHeader) {
+            cartItemCountSpanHeader.textContent = totalItems;
+            cartItemCountSpanHeader.style.display = totalItems > 0 ? 'inline-block' : 'none';
         }
+        
+        // If there was an old sidebar counter, we might want to update it too or remove its logic
+        // const oldCartItemCountSpan = document.getElementById('cart-item-count');
+        // if (oldCartItemCountSpan) { /* ... update or hide ... */ }
     };
 
     function renderCart() {
@@ -57,18 +64,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemTotal = item.price * item.quantity;
             grandTotal += itemTotal;
 
+            const productInStock = window.products ? window.products.find(p => p.id === item.id) : null;
+            // Если товар по какой-то причине не найден в window.products (например, был удален из каталога после добавления в корзину),
+            // currentStock будет Infinity, что позволит изменять количество, но это редкий крайний случай.
+            // В идеале, такие товары нужно было бы обрабатывать отдельно (например, удалять из корзины или помечать как недоступные).
+            const currentStock = productInStock ? productInStock.stock : Infinity;
+            
             const row = tbody.insertRow();
             row.className = 'cart-item-row';
             row.innerHTML = `
                 <td class="cart-item-image-cell">
-                    <img src="${item.imageUrl}" alt="${item.name}" class="cart-item-image">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                 </td>
                 <td class="cart-item-name">${item.name}</td>
                 <td class="cart-item-price">${item.price}₽</td>
                 <td class="cart-item-quantity">
                     <button class="quantity-btn" data-index="${index}" data-action="decrease" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
                     <span>${item.quantity}</span>
-                    <button class="quantity-btn" data-index="${index}" data-action="increase">+</button>
+                    <button class="quantity-btn" data-index="${index}" data-action="increase" ${item.quantity >= currentStock ? 'disabled' : ''}>+</button>
                 </td>
                 <td class="cart-item-subtotal">${itemTotal}₽</td>
                 <td class="cart-item-remove">
@@ -128,21 +141,90 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateQuantity(index, action) {
-        if (action === 'increase') {
-            cart[index].quantity++;
-        } else if (action === 'decrease' && cart[index].quantity > 1) {
-            cart[index].quantity--;
+        const cartItem = cart[index];
+        if (!cartItem) {
+            console.error("Cart item not found at index:", index);
+            return;
         }
+
+        const productInCatalog = window.products ? window.products.find(p => p.id === cartItem.id) : null;
+
+        if (!productInCatalog) {
+            console.error(`Product with id ${cartItem.id} not found in window.products. Cannot update quantity in cart.`);
+            if (window.showToastNotification) {
+                window.showToastNotification('Ошибка: Информация о товаре не найдена, количество не обновлено.', 'error');
+            } else {
+                alert('Ошибка: Информация о товаре не найдена, количество не обновлено.');
+            }
+            return;
+        }
+
+        if (action === 'increase') {
+            // Проверяем, есть ли ЕЩЕ товар на складе (productInCatalog.stock это УЖЕ уменьшенный остаток)
+            // Нам нужно проверить, что productInCatalog.stock (текущий остаток на складе) > 0
+            if (typeof productInCatalog.stock === 'number' && productInCatalog.stock <= 0) {
+                 if (window.showToastNotification) {
+                     window.showToastNotification(`Невозможно увеличить количество \"${productInCatalog.name}\". Товар закончился на складе.`);
+                } else {
+                    alert(`Невозможно увеличить количество \"${productInCatalog.name}\". Товар закончился на складе.`);
+                }
+                // Убедимся, что кнопка "+" в корзине заблокирована, если stock стал 0
+                // Это должно произойти при renderCart(), но на всякий случай
+                renderCart(); 
+                return; 
+            }
+            
+            // Уменьшаем stock в window.products
+            productInCatalog.stock -= 1;
+            cartItem.quantity++;
+
+        } else if (action === 'decrease') {
+            if (cartItem.quantity > 1) {
+                // Увеличиваем stock в window.products
+                productInCatalog.stock += 1;
+                cartItem.quantity--;
+            } else {
+                return; // Уже 1, дальше не уменьшаем
+            }
+        }
+
         localStorage.setItem('cart', JSON.stringify(cart));
-        renderCart();
-        updateCartCountDisplay();
+        renderCart(); 
+        if (window.updateCartCountDisplay) {
+            window.updateCartCountDisplay();
+        }
+        // Обновляем отображение товара в каталоге, если функция доступна
+        if (window.updateProductDisplayInCatalog) {
+            window.updateProductDisplayInCatalog(cartItem.id);
+        }
     }
 
-    window.removeFromCart = function(index) { // Made global for potential external calls if needed, though not used now
+    window.removeFromCart = function(index) {
+        const removedItem = cart[index];
+        if (!removedItem) {
+            console.error("Item to remove not found at index:", index);
+            return;
+        }
+
+        const productInCatalog = window.products ? window.products.find(p => p.id === removedItem.id) : null;
+
+        if (productInCatalog) {
+            // Возвращаем количество удаленного товара на "склад" в window.products
+            productInCatalog.stock += removedItem.quantity;
+        } else {
+            console.warn(`[removeFromCart] Product with id ${removedItem.id} not found in window.products. Stock not restored.`);
+        }
+
         cart.splice(index, 1);
         localStorage.setItem('cart', JSON.stringify(cart));
         renderCart();
-        updateCartCountDisplay();
+        if (window.updateCartCountDisplay) {
+            window.updateCartCountDisplay();
+        }
+        // Обновляем отображение товара в каталоге
+        if (productInCatalog && window.updateProductDisplayInCatalog) {
+            window.updateProductDisplayInCatalog(removedItem.id);
+        }
     };
 
     renderCart();

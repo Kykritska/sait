@@ -71,7 +71,71 @@ body {
     background-color: var(--bg-header);
     border-bottom: 1px solid var(--border-color-header);
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    gap: 15px; /* Add gap between flex items */
+    gap: 10px; /* Adjusted gap */
+}
+
+.header-cart-button {
+    display: flex;
+    align-items: center;
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-size: 1.2em; /* Make icon part larger */
+}
+
+.header-cart-button:hover {
+    background-color: var(--accent-color-darker);
+    color: var(--accent-text-color); /* Ensure text color remains on hover */
+}
+
+.header-cart-button .cart-count {
+    background-color: var(--bg-page); /* A contrasting background for the count */
+    color: var(--text-color); /* Contrasting text color for the count */
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 0.7em; /* Smaller font for the count */
+    margin-left: 8px;
+    font-weight: bold;
+    min-width: 10px; /* Ensure it's visible even with single digit */
+    text-align: center;
+    display: inline-block; /* To apply padding and min-width */
+}
+
+/* Ensure the cart count display updates correctly */
+/* Original .cart-count might need adjustment if it was specifically for sidebar */
+.cart-count {
+    /* General styles if any, specific styles for header are above */
+    /* display: none; by default in HTML, shown by JS */
+}
+
+body.dark-theme .header-cart-button {
+    background-color: var(--accent-color-dark-theme);
+    color: var(--accent-text-color-dark-theme);
+}
+
+body.dark-theme .header-cart-button:hover {
+    background-color: var(--accent-color-dark-theme-darker);
+}
+
+body.dark-theme .header-cart-button .cart-count {
+    background-color: var(--bg-page); /* Or a specific dark theme contrast */
+    color: var(--text-color);
+}
+
+body.high-contrast .header-cart-button {
+    background-color: ButtonText;
+    color: ButtonFace;
+    border: 2px solid ButtonText;
+}
+
+body.high-contrast .header-cart-button .cart-count {
+    background-color: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
 }
 
 .site-title {
@@ -126,6 +190,12 @@ body {
     animation: ticker-left-to-right 15s linear infinite;
 }
 
+.banner-link {
+    display: block; /* Make the link a block to fill the banner area */
+    text-decoration: none; /* Remove underline from link */
+    color: inherit; /* Inherit text color from .banner-area */
+}
+
 @keyframes ticker-left-to-right {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
@@ -134,7 +204,8 @@ body {
 .main-area-wrapper {
     grid-area: main-content;
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    /* grid-template-columns: 3fr 1fr; Old ratio */
+    grid-template-columns: 1.618fr 1fr; /* Golden ratio approximation */
     gap: 20px;
     padding: 20px;
 }
@@ -805,6 +876,18 @@ body.dark-theme .product-card-placeholder .placeholder-img {
     font-size: 1.1em;
     color: var(--text-link); /* Use link color for price */
     margin-bottom: 15px;
+}
+
+.product-price .current-price {
+    /* Styles for the current price if needed - for now, it inherits from .product-price */
+    margin-right: 8px; /* Add some space between current and original price */
+}
+
+.product-price .original-price {
+    text-decoration: line-through;
+    color: var(--text-muted); /* Muted color for original price */
+    font-size: 0.9em; /* Slightly smaller font for original price */
+    opacity: 0.7;
 }
 
 body.dark-theme .product-card .product-price {
@@ -2424,8 +2507,8 @@ body.dark-theme .pagination-ellipsis {
 /* Employee specific gallery styles */
 .gallery-employee-item {
     margin: 0; /* Reset default figure margin */
-    position: relative;
-    overflow: hidden; /* Ensure figcaption doesn't overflow */
+    position: relative; /* Already set on .gallery-grid > *, but re-state for clarity if .gallery-employee-item has other unique positioning needs */
+    /* overflow: hidden; is now on .gallery-grid > * so it might be redundant here */
 }
 
 .gallery-employee-item img {
@@ -2488,3 +2571,484 @@ body.dark-theme .gallery-employee-item figcaption small {
 .high-contrast .gallery-employee-item figcaption small {
     color: #00ff00 !important; /* Green text */
 }
+
+/* Styles for product_order_form.html */
+#productOrderForm {
+    max-width: 600px; /* Limit form width for better readability */
+    margin: 20px auto; /* Center the form on the page */
+    padding: 25px;
+    border: 1px solid var(--border-color-content-section);
+    border-radius: 8px;
+    background-color: var(--bg-sidebar); /* Or var(--bg-wrapper) */
+}
+
+#productOrderForm h1 { /* If you add a H1 inside the form container */
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+#productOrderForm div {
+    margin-bottom: 15px; /* Space between form groups */
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    /* align-items: center; */ /* Меняем на flex-start для лучшего выравнивания многострочных элементов */
+    align-items: flex-start; 
+}
+
+#productOrderForm label { /* Основные метки формы */
+    flex-basis: 150px; 
+    flex-shrink: 0;
+    margin-right: 15px; 
+    font-weight: bold;
+    text-align: right; 
+    padding-top: 5px; /* Оставим пока, посмотрим, как будет с flex-start */
+}
+
+#productOrderForm input[type="text"],
+#productOrderForm input[type="password"],
+#productOrderForm input[type="number"],
+#productOrderForm select,
+#productOrderForm textarea {
+    flex-grow: 1; /* Allow input to take remaining space */
+    min-width: 200px; /* Minimum width for inputs */
+    /* Using general input styles, but can override here if needed */
+    /* e.g., width: auto; if flex-grow is sufficient */
+}
+
+/* Specific width for inputs that were styled inline, now managed by flex */
+#productOrderForm input#recipientAddress,
+#productOrderForm textarea#additionalInfo {
+    /* width: 300px; */ /* Handled by flex-grow and min-width */
+}
+#productOrderForm input#quantity {
+    /* width: 60px; */ /* Handled by flex-grow and min-width, or set a max-width if needed */
+    max-width: 100px;
+}
+
+
+#productOrderForm fieldset {
+    border: 1px solid var(--border-color-input);
+    border-radius: 4px;
+    padding: 10px 15px 15px 15px; /* Увеличим нижний padding */
+    margin-bottom: 15px;
+    width: 100%; 
+    box-sizing: border-box; /* Учитывать padding и border в общей ширине */
+    position: relative; /* Для возможного позиционирования legend */
+}
+
+#productOrderForm fieldset legend {
+    font-weight: bold;
+    padding: 0 5px;
+    color: var(--text-color);
+    /* margin-left: -5px; */ /* Это мы уберем, попробуем другой подход */
+    /* Следующие два свойства для визуального выравнивания legend как метки */
+    /* Это может быть не идеально для всех случаев и доступности, но стремимся к картинке */
+    display: block; /* Или inline-block, чтобы можно было задать отступы */
+    width: 150px; /* Такая же ширина, как у основных меток */
+    margin-right: 15px;
+    text-align: right;
+    padding-top: 0; /* Убедимся, что нет лишнего верхнего отступа */
+    position: absolute; /* Позиционируем абсолютно относительно fieldset */
+    left: -165px; /* Смещаем влево (150px ширина + 15px отступ) */
+    top: 10px; /* Подбираем по месту, чтобы совпадало с первой строкой fieldset */
+    box-sizing: border-box;
+}
+
+/* Обертка для содержимого fieldset, чтобы оно располагалось правее "псевдо-метки" legend */
+#productOrderForm fieldset .fieldset-content-wrapper {
+    margin-left: 165px; /* Отступ равный ширине legend + ее правый отступ, чтобы контент не залезал под legend */
+    padding-top: 0; /* Начало контента с самого верха fieldset */
+}
+
+#productOrderForm fieldset div { /* Это контейнеры для каждой радиокнопки + метки */
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    /* padding-left: 0; */ /* Убираем, если wrapper уже смещает */
+}
+
+#productOrderForm fieldset div:last-child {
+    margin-bottom: 0;
+}
+
+#productOrderForm fieldset label { /* Метки для самих радиокнопок */
+    flex-basis: auto;
+    text-align: left;
+    margin-right: 5px;
+    font-weight: normal;
+    padding-top: 0;
+    margin-left: 0;
+    line-height: 1; /* Для лучшего вертикального выравнивания с радиокнопкой */
+}
+
+#productOrderForm input[type="radio"],
+#productOrderForm input[type="checkbox"] {
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+/* Стили для чекбокса "Оплата наличными", чтобы он тоже был с отступом */
+#productOrderForm div.checkbox-container {
+    padding-left: 165px; /* Такой же отступ, как у fieldset-content-wrapper и кнопок */
+    /* display: flex; */ /* Уже должно быть от общего правила для div */
+    /* align-items: center; */ /* Уже должно быть */
+}
+#productOrderForm div.checkbox-container input[type="checkbox"] {
+    /* уже стилизован */
+}
+#productOrderForm div.checkbox-container label {
+    flex-basis: auto; 
+    text-align: left; 
+    font-weight: normal;
+    padding-top: 0;
+    margin-left: 0;
+}
+
+/* Buttons container */
+#productOrderForm div:last-child {
+    justify-content: flex-start; /* Align buttons to the start */
+    padding-left: 165px; /* Align buttons with input fields (label width + margin) */
+}
+
+#productOrderForm button {
+    width: auto; /* Override general button width */
+    padding: 10px 20px;
+    margin-right: 10px; /* Space between buttons */
+}
+
+#productOrderForm button[type="reset"] {
+    background-color: var(--bg-button);
+    color: var(--text-button);
+    border-color: var(--border-color-button);
+}
+
+#productOrderForm button[type="reset"]:hover {
+    background-color: var(--bg-button-hover);
+}
+
+#productOrderForm .error-message {
+    flex-basis: 100%; /* Take full width below the input */
+    margin-left: 165px; /* Align with input fields */
+    color: #D8000C; /* Red color for errors */
+    background-color: #FFD2D2; /* Light red background for errors */
+    border: 1px solid #D8000C;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    margin-top: 5px; /* Space above the error message */
+    display: block; /* Ensure it takes its own line */
+}
+
+/* Responsive adjustments for the form */
+@media (max-width: 600px) {
+    #productOrderForm label {
+        flex-basis: 100%; /* Labels take full width on small screens */
+        text-align: left; /* Align label text to left */
+        margin-bottom: 5px; /* Space below label */
+        padding-top: 0;
+    }
+
+    #productOrderForm input[type="text"],
+    #productOrderForm input[type="password"],
+    #productOrderForm input[type="number"],
+    #productOrderForm select,
+    #productOrderForm textarea {
+        min-width: 100%; /* Inputs take full width */
+    }
+
+    #productOrderForm div:last-child {
+        padding-left: 0; /* Reset padding for buttons */
+        justify-content: center; /* Center buttons */
+    }
+    #productOrderForm .error-message {
+        margin-left: 0; /* Error messages take full width */
+    }
+}
+
+/* Новые стили для группы радиокнопок */
+#productOrderForm .radio-group-container {
+    display: flex;
+    flex-direction: row; /* Располагаем опции радиокнопок горизонтально */
+    align-items: center; /* Вертикально выравниваем с меткой "Доставка транспортом" */
+    flex-grow: 1;
+    min-width: 0; /* Allow shrinking */
+    flex-shrink: 1; /* Allow shrinking */
+}
+
+#productOrderForm .radio-option {
+    display: flex;
+    align-items: center;
+    margin-right: 15px; /* Отступ между опциями */
+}
+
+#productOrderForm .radio-option:last-child {
+    margin-right: 0; /* Убираем отступ у последней опции */
+    margin-bottom: 0;
+}
+
+#productOrderForm .radio-option input[type="radio"] {
+    margin: 0 8px 0 0; /* Убираем стандартные отступы, добавляем справа */
+    flex-shrink: 0;
+    /* Можно попробовать задать размер, если браузерные стили сильно отличаются, но обычно не нужно */
+    /* width: 1em; height: 1em; */
+}
+
+#productOrderForm .radio-option label { /* Метки для "фирмы", "своим" */
+    font-weight: normal;
+    text-align: left;
+    flex-basis: auto; 
+    margin-right: 0;
+    padding-top: 0; 
+    line-height: normal; /* Используем normal для лучшего выравнивания с радиокнопкой */
+}
+
+/* Scroll-to-top button */
+#scrollToTopBtn {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    cursor: pointer;
+    width: 40px; /* Set fixed width */
+    height: 40px; /* Set fixed height */
+    border-radius: 50%; /* Make it round */
+    font-size: 18px; /* Adjust font size for new button size */
+    line-height: 40px; /* Center arrow vertically */
+    text-align: center; /* Center arrow horizontally */
+    padding: 0; /* Remove padding if width/height are set */
+    box-shadow: 0 2px 5px var(--shadow-color-button);
+    transition: background-color 0.3s, opacity 0.3s, visibility 0.3s;
+}
+
+#scrollToTopBtn:hover {
+    background-color: var(--accent-color-darker);
+}
+
+body.dark-theme #scrollToTopBtn {
+    background-color: var(--accent-color-dark-theme);
+    color: var(--accent-text-color-dark-theme);
+}
+
+body.dark-theme #scrollToTopBtn:hover {
+    background-color: var(--accent-color-dark-theme-darker);
+}
+
+body.high-contrast #scrollToTopBtn {
+    background-color: ButtonText;
+    color: ButtonFace;
+    border: 2px solid ButtonText;
+    /* Ensure width/height are respected, padding might need to be 0 */
+    padding: 0; 
+    line-height: 36px; /* Adjust for border */
+}
+
+body.high-contrast #scrollToTopBtn:hover {
+    background-color: Highlight;
+    color: HighlightText;
+}
+
+/* News Page Styles */
+.news-section {
+    padding: 20px 0;
+}
+
+.news-item {
+    background-color: var(--bg-content-section);
+    border: 1px solid var(--border-color-content-section);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.news-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.news-item h2 {
+    margin-top: 0;
+    color: var(--text-link);
+}
+
+.news-date {
+    font-size: 0.9em;
+    color: var(--text-placeholder);
+    margin-bottom: 10px;
+}
+
+.news-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.news-read-more {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.news-read-more:hover {
+    color: var(--accent-color-darker);
+    text-decoration: underline;
+}
+
+body.dark-theme .news-item {
+    background-color: var(--bg-content-section-dark);
+    border-color: var(--border-color-content-section-dark);
+}
+
+body.dark-theme .news-item h2 {
+    color: var(--text-link-dark-theme);
+}
+
+body.dark-theme .news-date {
+    color: var(--text-placeholder-dark-theme);
+}
+
+body.dark-theme .news-read-more {
+    color: var(--accent-color-dark-theme);
+}
+
+body.dark-theme .news-read-more:hover {
+    color: var(--accent-color-dark-theme-darker);
+}
+
+body.high-contrast .news-item {
+    background-color: Window;
+    border: 2px solid WindowText;
+    box-shadow: none;
+}
+
+body.high-contrast .news-item h2 {
+    color: LinkText;
+}
+
+body.high-contrast .news-date {
+    color: GrayText;
+}
+
+body.high-contrast .news-read-more {
+    color: LinkText;
+    text-decoration: underline;
+}
+
+/* Responsive adjustments for news items if needed */
+@media (max-width: 768px) {
+    .news-item {
+        /* Potentially adjust padding or margins for smaller screens */
+    }
+}
+
+/* About Us Page - New Sections Styles */
+.content-section section > section { /* Target inner sections like company-history, our-consultants */
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color-soft);
+}
+
+.content-section section > section:first-of-type {
+    margin-top: 20px; /* Less margin for the first custom section if needed */
+}
+
+.company-history h2,
+.our-consultants h2,
+.company-partners h2 {
+    color: var(--text-color-dark);
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.company-history p,
+.our-consultants p,
+.company-partners p {
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.consultants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Utilize existing .gallery-employee-item styles if they are suitable 
+   or add more specific ones here if needed. 
+   The existing .gallery-employee-item styles in the gallery section are:
+    .gallery-employee-item {
+        background-color: var(--bg-content-section);
+        border: 1px solid var(--border-color-content-section);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery-employee-item img {
+        max-width: 150px; 
+        height: 150px; 
+        object-fit: cover;
+        border-radius: 50%; 
+        margin-bottom: 10px;
+        border: 3px solid var(--accent-color-light);
+    }
+    .gallery-employee-item figcaption strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+        color: var(--text-color-dark);
+    }
+    .gallery-employee-item figcaption small {
+        font-size: 0.9em;
+        color: var(--text-color-medium);
+    }
+    We will assume these are sufficient for now. 
+*/
+
+.brands-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Gap between items */
+    margin-top: 15px;
+}
+
+.brands-list li {
+    background-color: var(--bg-color-light-accent);
+    color: var(--text-color-dark);
+    padding: 8px 15px;
+    border-radius: 20px; /* Pill shape */
+    font-size: 0.9em;
+    border: 1px solid var(--border-color-soft);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+body.dark-theme .company-history h2,
+body.dark-theme .our-consultants h2,
+body.dark-theme .company-partners h2 {
+    color: var(--text-color-dark-dark-theme);
+    border-bottom-color: var(--accent-color-dark-theme);
+}
+
+body.dark-theme .brands-list li {
+    background-color: var(--bg-color-medium-dark-theme); /* Slightly lighter than main bg */
+    color: var(--text-color-light-dark-theme);
+    border-color: var(--border-color-content-section-dark);
+}
+
+/* Make sure there are no other unclosed blocks above */

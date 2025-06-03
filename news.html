@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости - ТехноПорт</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,23 +33,21 @@
 
     <div class="main-area-wrapper">
         <main class="content-section">
-            <section>
-                <h1>Регистрация</h1>
-                <form id="register-form" method="post">
-                    <div>
-                        <label for="register-name">Имя:</label>
-                        <input type="text" id="register-name" name="name" placeholder="Ваше имя" required>
-                    </div>
-                    <div>
-                        <label for="register-email">Email:</label>
-                        <input type="email" id="register-email" name="email" placeholder="example@example.com" required>
-                    </div>
-                    <div>
-                        <label for="register-password">Пароль:</label>
-                        <input type="password" id="register-password" name="password" placeholder="Минимум 8 символов" required minlength="8">
-                    </div>
-                    <button type="submit">Зарегистрироваться</button>
-                </form>
+            <section class="news-section">
+                <h1>Новости</h1>
+                <article class="news-item">
+                    <h2>Обновление ассортимента видеокарт!</h2>
+                    <p class="news-date">15 июля 2024</p>
+                    <img src="rtx3060.png" alt="Новые видеокарты" class="news-image">
+                    <p>Рады сообщить о большом поступлении новейших видеокарт от NVIDIA и AMD. Теперь у нас в наличии популярные модели RTX 40-й серии и RX 7000-й серии. Спешите, количество ограничено!</p>
+                </article>
+                <article class="news-item">
+                    <h2>Летняя распродажа процессоров!</h2>
+                    <p class="news-date">10 июля 2024</p>
+                     <img src="https://c1.neweggimages.com/ProductImageCompressAll1280/19-113-683-V01.jpg" alt="Распродажа процессоров" class="news-image">
+                    <p>Не упустите шанс обновить свой ПК! Скидки до 25% на все процессоры Intel Core i5, i7, i9 и AMD Ryzen 5, 7, 9. Лучшее время для апгрейда!</p>
+                </article>
+                <!-- Add more news items here -->
             </section>
         </main>
 
@@ -105,9 +104,9 @@
 <script defer src="script.js"></script>
 <script defer src="counter.js"></script>
 <script defer src="accessibility.js"></script>
-<script defer src="auth.js"></script>
 <script defer src="theme-switcher.js"></script>
 <script defer src="clock.js"></script>
 <script defer src="nav-highlight.js"></script>
+<script defer src="news.js"></script>
 </body>
-</html>
+</html> 
