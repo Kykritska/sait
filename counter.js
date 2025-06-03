@@ -2,15 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const visitCountElement = document.getElementById('visit-count');
 
     if (visitCountElement) {
-        let count = localStorage.getItem('visitorCount');
-
-        if (count === null) {
-            count = 1;
-        } else {
-            count = parseInt(count) + 1;
+        // Check if this is the first visit in this session
+        if (!sessionStorage.getItem('visited')) {
+            let count = localStorage.getItem('visitorCount');
+            count = count ? parseInt(count) + 1 : 1;
+            localStorage.setItem('visitorCount', count);
+            sessionStorage.setItem('visited', 'true');
         }
-
-        localStorage.setItem('visitorCount', count);
-        visitCountElement.textContent = count;
+        
+        // Display the current count
+        const currentCount = localStorage.getItem('visitorCount') || 0;
+        visitCountElement.textContent = currentCount;
     }
 }); 
